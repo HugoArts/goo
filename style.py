@@ -1,10 +1,11 @@
 #! /usr/bin/env python
 
-import pygame 
+import pygame
 
 """style.py - The GUI Style object.
 
-the Style object is used to apply different styles to gui elements. The object functions like a dictionary
+the Style object is used to apply different styles to gui elements.
+The object functions like a dictionary
 """
 
 #this are used in multiple options
@@ -45,9 +46,10 @@ class Style(dict):
     def __init__(self, **kwargs):
         """Create a new Style object.
 
-        Any options that you don't specify will be taken from the default options. The options
-        are passed into the constructor as keyword arguments. If you have options in a dictionary, use extended
-        call syntax: Style(**options)
+        Any options that you don't specify will be taken from the default
+        options. The options are passed into the constructor as keyword
+        arguments. If you have options in a dictionary, use extended call
+        syntax: Style(**options)
         """
         dict.__init__(self)
         for key, val in dic.iteritems():
@@ -57,15 +59,15 @@ class Style(dict):
     def __setitem__(self, key, value):
         """set a style option.
 
-        The method checks for invalid option names, and verifies the type of the object.
-        A KeyError is raised if you try to set a non-existant option. A value of the wrong type causes
-        a TypeError.
+        The method checks for invalid option names, and verifies the type of
+        the object. A KeyError is raised if you try to set a non-existant
+        option. A value of the wrong type causes a TypeError.
         """
         if key not in DEFAULT_STYLE:
             raise KeyError("Attempt to set invalid GUI style option: '%s'" % key)
         elif type(value) != type(DEFAULT_STYLE[key]):
-            raise TypeError("Attempt to set '%s' to value of the wrong type (was '%s' instead of '%s')" 
-                             % (key, type(value), type(DEFAULT_STYLE[key]))
+            raise TypeError("Attempt to set '%s' to value of the wrong type (was '%s' instead of '%s')"
+                            % (key, type(value), type(DEFAULT_STYLE[key]))
         else:
             dict.__setitem__(self, key, value)
 
@@ -73,8 +75,9 @@ class Style(dict):
         """called in case a non-existant key is requested
 
         It might be the case that the item is simply not set in this instance.
-        Therefore, we first check if there is a default value for this setting available.
-        If that is not the case either, the key is invalid, and we must raise a KeyError
+        Therefore, we first check if there is a default value for this setting
+        available. If that is not the case either, the key is invalid, and we
+        must raise a KeyError.
         """
         if key in self.DEFAULT_STYLE:
             return self.DEFAULT_STYLE[key]
