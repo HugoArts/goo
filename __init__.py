@@ -5,4 +5,5 @@
 
 __all__ = ['style']
 
+import gui.element
 import gui.style
