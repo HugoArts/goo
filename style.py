@@ -44,7 +44,7 @@ class Style(dict):
     passed into almost any element to determine its style. You can initialize
     this without passing in anything to use the DEFAULT_OPTIONS style. Note that
     when iterating, printing, or calling methods such as iteritems() on
-    this object, options not set (i.e. DEFAULT_OPTIONS) are not included.
+    this object, options not set (i.e. defaults) are not included.
     """
     __slots__ = []
 

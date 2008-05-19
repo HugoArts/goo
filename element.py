@@ -12,7 +12,6 @@ class Element(std.sprite.Sprite):
         """initialize the element."""
         std.sprite.Sprite.__init__(self)
         self.style = style
-        self.hidden = False
 
         #assign default style if none is set
         if self.style is None:
