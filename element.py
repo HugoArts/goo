@@ -2,27 +2,58 @@
 
 """element.py - base class for all GUI elements"""
 
-import stdtools as std
+import gunge
 import goo.style
 
 
 class Element(std.sprite.Sprite):
     """Element - the base class for all GUI elements"""
 
-    #we do nothing with attributes yet, but we will. Perhaps it will be moved into another function, but who knows
     def __init__(self, parent, **attributes):
         """Initialize element."""
         std.sprite.Sprite.__init__(self)
         self.parent = parent
+        self.attributes = attributes
 
-    def create_element(self, style, position):
+        gunge.event.EventManager.bindToGlobal(
+            (gunge.event.KILL_OBJECT, self.onkillparent, {'object': self.parent}))
+
+        #TODO implement goo.style.get, or another way to get XML-specified styles
+        if 'style' in attributes:
+            self.style = goo.style.get(attributes['style'])
+        elif:
+            self.style = parent.style
+
+    def __cmp__(self, rhs):
+        """compare for equality
+
+        for performance purposes, this just performs a comparison of identity.
+        """
+        return (self is rhs)
+
+    def create_element(self):
         """Renders the element sprite.
 
-        This function renders the sprite of the element, using the specified style,
+        This function renders the sprite of the element,
         and properly arranges it inside its parent.
         """
-        #this will do something later, like arrange the element in its' parent correctly
-        raise NotImplementedError("Class '%s' does not implement a create_element method" % type(self).__name__)
+        parent = self.parent
+        (x, y) = parent.nextchild_pos
+        self.pos = (x + parent.style['margin'], y + parent.style['margin'])
+
+        #prepare parent for next attaching child
+        parent.nextchild_pos = self.rect.bottomleft
+        if self.rect.width > parent.rect.width:
+            parent.rect.width = self.rect.width
+
+    def onkillparent(self, event):
+        """called when the elements' parent is killed.
+
+        When any sprite is killed, it sends out a KILL_OBJECT event to ensure
+        proper resource cleanup (in the modelview, for example). If this elements' parent
+        is killed, this element must itself also be killed.
+        """
+        self.kill()
 
     def get_pos(self):
         """get elements' relative position

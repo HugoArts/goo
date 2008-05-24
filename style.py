@@ -53,7 +53,7 @@ class Style(dict):
     """
     __slots__ = []
 
-    def __init__(self, **kwargs):
+    def __init__(self, name, **kwargs):
         """Create a new Style object.
 
         Any options that you don't specify will be taken from the DEFAULT_OPTIONS
@@ -62,6 +62,7 @@ class Style(dict):
         syntax: Style(**options)
         """
         dict.__init__(self)
+        self.name = name
         for key, val in kwargs.iteritems():
             self[key] = val
 
@@ -92,3 +93,18 @@ class Style(dict):
             return DEFAULT_OPTIONS[key]
         else:
             raise KeyError("Attempt to retrieve invalid GUI style option: '%s'" % key)
+
+
+# dict of all registered styles. Styles must be registered to be recognised in XML
+style_dict = {'default': Style()}
+
+def add(style):
+    """add a style to the XML-recognised style list
+
+    note that if a style with the same name was already present, it will be overwritten.
+    """
+    style_dict[style.name] = style
+
+def get(name):
+    """retrieve a style from the XML-recognised style list by its name"""
+    return style_dict[name]

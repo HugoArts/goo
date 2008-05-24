@@ -19,13 +19,12 @@ class Container(goo.element.Element):
             goo.parser.parse(node, self)
         self.create_element()
 
-    def create_element(self, style, position):
+    def create_element(self):
         """render the container sprite."""
-        #TODO we'll need to rewrite this crap for sure. I'm not sure how yet
+        #the width is already set by the children, but we add margin. The height is the nextchild_pos y coordinate
+        self.rect.width = self.rect.width + self.style['margin']
+        self.rect.height = self.nextchild_pos[1] + self.style['margin']
+        self.img = pygame.Surface((self.rect.size))
 
-        #for now, we'll assume we already know its size
-        self.img = pygame.Surface(self.size).convert_alpha()
-        self.rect = pygame.Rect(self.pos, self.size)
-
-        self.img.fill(self.style['container_background_color'])
-        pygame.draw.rect(self.img, self.style['container_border_color'], pygame.Rect((0,0), self.size), self.style['container_border_width'])
+        self.img.fill(self.style['background_color'])
+        pygame.draw.rect(self.img, self.style['border_color'], pygame.Rect((0,0), self.rect.size), self.style['border_width'])
