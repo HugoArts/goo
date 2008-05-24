@@ -35,7 +35,7 @@ def parse(node, parent=None):
     The node is attached to the parent, if specified. if the node is not attached to any parent.
     the function hands the nodes' children to the created widget to also be parsed.
     """
-    widget = get_widget(node)
+    widget = get_widget(node)(parent)
 
 def get_widget(node):
     """Retrieve a widget for a certain node.
