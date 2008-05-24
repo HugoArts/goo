@@ -18,18 +18,10 @@ class Element(std.sprite.Sprite):
         gunge.event.EventManager.bindToGlobal(
             (gunge.event.KILL_OBJECT, self.onkillparent, {'object': self.parent}))
 
-        #TODO implement goo.style.get, or another way to get XML-specified styles
         if 'style' in attributes:
             self.style = goo.style.get(attributes['style'])
         elif:
             self.style = parent.style
-
-    def __cmp__(self, rhs):
-        """compare for equality
-
-        for performance purposes, this just performs a comparison of identity.
-        """
-        return (self is rhs)
 
     def create_element(self):
         """Renders the element sprite.
