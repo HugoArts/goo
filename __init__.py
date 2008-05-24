@@ -3,7 +3,7 @@
 """gui - (name will change)"""
 
 
-__all__ = ['style', 'element']
+__all__ = ['style', 'container']
 
 import gui.style
-import gui.element
+import gui.container

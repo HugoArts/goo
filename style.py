@@ -13,25 +13,30 @@ DEFAULT_SURFACE.set_colorkey((0, 0, 0))
 
 # the DEFAULT_OPTIONS style options are picked if no option is set by the user
 DEFAULT_OPTIONS = {
-    # button style attributes
+    #container style
+    'container_background_color': (0, 255, 0, 100),
+    'container_border_color': (255, 0, 0, 155),
+    'container_border_width': 20,
+
+    # button style
     'button_image': DEFAULT_SURFACE,
     'button_focus': DEFAULT_SURFACE,
     'button_click': DEFAULT_SURFACE,
     'button_margin': 10,
 
-    # menu item style attributes
+    # menu item style
     'menu_item_image': DEFAULT_SURFACE,
     'menu_item_focus': DEFAULT_SURFACE,
     'menu_item_click': DEFAULT_SURFACE,
     'menu_item_margin': 10,
     'menu_margin': 30,
 
-    # slider bar style attributes
+    # slider bar style
     'slider_bar': DEFAULT_SURFACE,
     'slider_cap': DEFAULT_SURFACE,
     'slider_button': DEFAULT_SURFACE,
 
-    # Text style attributes
+    # Text style
     'text_font': None,
     'text_size': 30,
     'text_color': (0,0,0),

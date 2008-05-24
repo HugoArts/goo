@@ -8,10 +8,11 @@ import gui.style
 class Element(std.sprite.Sprite):
     """Element - the base class for all GUI elements"""
 
-    def __init__(self, style=None):
+    def __init__(self, style=None, pos=(0,0)):
         """initialize the element."""
         std.sprite.Sprite.__init__(self)
         self.style = style
+        self.pos   = pos
 
         #assign default style if none is set
         if self.style is None:
