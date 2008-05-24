@@ -24,7 +24,7 @@ def load_xml(filename):
     the widget is then returned.
     """
     root = minidom.parse(filename).documentElement
-    if root.tagName != "rootnode":
+    if root.tagName != "gamegoo":
         raise ParseError("'%s' does not seem to be a valid GameGoo XML document (invalid root node)" % filename)
     return parse(root)
 
