@@ -1,21 +1,28 @@
 #! /usr/bin/env python
 
-import element
+import goo
 import pygame
 
-class Container(element.Element):
+class Container(goo.element.Element):
     """A basic container.
 
     The most basic of all containers. It draws a simple border around its
     elements and provides a background image. The box is not resizable,
     but it is nestable.
     """
-    def __init__(self, style=None, pos=(0,0), size=(0,0)):
-        element.Element.__init__(self, style, pos)
-        self.size = size
+    def __init__(self, parent, children, **attributes):
+        """initialize container"""
+        goo.element.Element.__init__(self, parent, **attributes)
+        self.nextchild_pos = (0,0)
+
+        for node in children:
+            goo.parser.parse(node, self)
         self.create_element()
 
-    def create_element(self):
+    def create_element(self, style, position):
+        """render the container sprite."""
+        #TODO we'll need to rewrite this crap for sure. I'm not sure how yet
+
         #for now, we'll assume we already know its size
         self.img = pygame.Surface(self.size).convert_alpha()
         self.rect = pygame.Rect(self.pos, self.size)

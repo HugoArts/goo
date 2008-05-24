@@ -5,6 +5,7 @@
 import xml.dom.minidom as minidom
 #import widgets
 
+PARSE_ALL = 0
 
 class ParseError(Exception):
     """Raised when an error occurs while parsing an xml document"""
@@ -13,20 +14,29 @@ class ParseError(Exception):
         self.filename = filename
 
     def __str__(self):
-        return self.message + " (filename: %s)" % self.filename
+        return self.message + " (file: %s)" % self.filename
 
 
-def load_xml(filename):
-    """load an xml file and return the resulting widget
+def load_xml(filename, ids=None):
+    """load an xml file and return the resulting widget(s)
 
-    this loads the filename given, turns it into a dom object,
-    and then hands it over to the parse function, so that it can create a widget from it.
-    the widget is then returned.
+    this loads the filename given, turns it into a dom object, and then hands it over to the 
+    parse function, which builds a widget from it. the widget is then returned. If the 
+    document contains multiple widgets, the caller can specify which ones to build with a 
+    list of IDs, or pass in goo.parser.PARSE_ALL to build all widgets. A list of the built
+    widgets is returned. If no ids argument is given, only the first widget is built.
     """
-    root = minidom.parse(filename).documentElement
+    doc = minidom.parse(filename)
+    root = doc.documentElement
     if root.tagName != "gamegoo":
-        raise ParseError("'%s' does not seem to be a valid GameGoo XML document (invalid root node)" % filename)
-    return parse(root)
+        raise ParseError("Invalid GameGoo XML document: invalid root node", filename)
+
+    if ids is None:
+        return parse(root.firstChild)
+    elif ids is PARSE_ALL:
+        return [parse(node) for node in root.childNodes]
+    else:
+        return [parse(doc.getElementById(i) for i in ids]
 
 def parse(node, parent=None):
     """Parse the DOM and create the widgets from it
@@ -35,7 +45,10 @@ def parse(node, parent=None):
     The node is attached to the parent, if specified. if the node is not attached to any parent.
     the function hands the nodes' children to the created widget to also be parsed.
     """
-    widget = get_widget(node)(parent)
+    if node.hasChildren():
+        return get_widget(node)(parent, node.childNodes, **get_attributes(node))
+    else:
+        widget = get_widget(node)(parent, **get_attributes(node))
 
 def get_widget(node):
     """Retrieve a widget for a certain node.

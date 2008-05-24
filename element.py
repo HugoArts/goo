@@ -9,7 +9,8 @@ import goo.style
 class Element(std.sprite.Sprite):
     """Element - the base class for all GUI elements"""
 
-    def __init__(self, parent):
+    #we do nothing with attributes yet, but we will. Perhaps it will be moved into another function, but who knows
+    def __init__(self, parent, **attributes):
         """Initialize element."""
         std.sprite.Sprite.__init__(self)
         self.parent = parent
@@ -24,11 +25,10 @@ class Element(std.sprite.Sprite):
         raise NotImplementedError("Class '%s' does not implement a create_element method" % type(self).__name__)
 
     def get_pos(self):
-        """get the elements' relative position
+        """get elements' relative position
 
         returns the elements relative position in an (x, y) tuple. This position
         is relative to the elements' parent. this is used through the self.pos property.
-        An elements' position is the location of its topleft corner
         """
         return self._pos
 
@@ -36,7 +36,7 @@ class Element(std.sprite.Sprite):
         """set elements' relative position
 
         sets the elements' position relative to its parent. Used by the self.pos property.
-        must be set using an (x, y) tuple. The position is the location of the top left of the element.
+        must be set using an (x, y) tuple.
         """
         #test if this new position is within the parent
         parent_rect = self.parent.rect
@@ -50,4 +50,4 @@ class Element(std.sprite.Sprite):
         self._pos = (x, y)
         self.rect = new_rect
 
-    pos = property(get_pos, set_pos, doc="The position of the element relative to its parent, in an (x, y) tuple).")
+    pos = property(get_pos, set_pos, doc="The position (topleft corner) of the element relative to its parent, in an (x, y) tuple).")
