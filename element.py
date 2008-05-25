@@ -22,6 +22,7 @@ class Element(gunge.sprite.Sprite):
             self.style = goo.style.get(attributes['style'])
         else:
             self.style = parent.style
+        self.create()
 
     def onkillparent(self, event):
         """called when the elements' parent is killed.
@@ -38,14 +39,7 @@ class Element(gunge.sprite.Sprite):
 
     def arrange(self):
         """arranges the element inside its parent"""
-        parent = self.parent
-        (x, y) = parent.nextchild_pos
-        self.pos = (x + parent.style['margin'], y + parent.style['margin'])
-
-        #prepare parent for next attaching child
-        parent.nextchild_pos = (x, self.rect.height + y)
-        if self.rect.width > parent.rect.width:
-            parent.rect.width = self.rect.width
+        self.pos = self.parent.get_childpos(self)
 
     def update(self):
         """update element (recalculate absolute position if parent has moved)"""
@@ -58,7 +52,6 @@ class Element(gunge.sprite.Sprite):
         """
         (x, y), (x_rel, y_rel) = self.parent.rect.topleft, self.pos
         return (x + x_rel, y + y_rel)
-
 
     def get_pos(self):
         """get elements' relative position
