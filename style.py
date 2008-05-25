@@ -51,7 +51,7 @@ class Style(dict):
     when iterating, printing, or calling methods such as iteritems() on
     this object, options not set (i.e. defaults) are not included.
     """
-    __slots__ = []
+    __slots__ = 'name'
 
     def __init__(self, name, **kwargs):
         """Create a new Style object.
@@ -96,7 +96,7 @@ class Style(dict):
 
 
 # dict of all registered styles. Styles must be registered to be recognised in XML
-style_dict = {'default': Style()}
+style_dict = {'default': Style("default")}
 
 def add(style):
     """add a style to the XML-recognised style list

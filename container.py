@@ -17,14 +17,15 @@ class Container(goo.element.Element):
 
         for node in children:
             goo.parser.parse(node, self)
-        self.create_element()
+        self.create()
 
-    def create_element(self):
+    def create(self):
         """render the container sprite."""
-        #the width is already set by the children, but we add margin. The height is the nextchild_pos y coordinate
+        #the width is already set by the children, just add margin. The height is the nextchild_pos y coordinate.
         self.rect.width = self.rect.width + self.style['margin']
         self.rect.height = self.nextchild_pos[1] + self.style['margin']
         self.img = pygame.Surface((self.rect.size))
 
         self.img.fill(self.style['background_color'])
         pygame.draw.rect(self.img, self.style['border_color'], pygame.Rect((0,0), self.rect.size), self.style['border_width'])
+        self.arrange()

@@ -3,7 +3,8 @@
 """parser.py: parse the xml documents into actual GUI elements"""
 
 import xml.dom.minidom as minidom
-#import widgets
+import gunge.mv
+#import goo.widgets
 
 PARSE_ALL = 0
 
@@ -36,7 +37,7 @@ def load_xml(filename, ids=None):
     elif ids is PARSE_ALL:
         return [parse(node) for node in root.childNodes]
     else:
-        return [parse(doc.getElementById(i) for i in ids]
+        return [parse(doc.getElementById(i)) for i in ids]
 
 def parse(node, parent=None):
     """Parse the DOM and create the widgets from it
@@ -45,10 +46,13 @@ def parse(node, parent=None):
     The node is attached to the parent, if specified. if the node is not attached to any parent.
     the function hands the nodes' children to the created widget to also be parsed.
     """
+    #TODO add some sort of Nullparent (e.g. the screen) with correct attributes so we don't end up with a headless tree
     if node.hasChildren():
-        return get_widget(node)(parent, node.childNodes, **get_attributes(node))
+        widget = get_widget(node)(parent, node.childNodes, **get_attributes(node))
     else:
         widget = get_widget(node)(parent, **get_attributes(node))
+    gunge.mv.add(widget)
+    return widget
 
 def get_widget(node):
     """Retrieve a widget for a certain node.
@@ -57,7 +61,7 @@ def get_widget(node):
     the relevant class to do so. It uses the string of the tagname to retrieve the right class.
     """
     try:
-        return getattr(minidom, node.tagName)
+        return getattr(widgets, node.tagName)
     except AttributeError:
         raise ParseError("encountered invalid tag: '%s'" % node.tagName, node.ownerDocument.documentURI)
  
