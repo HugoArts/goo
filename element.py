@@ -3,7 +3,7 @@
 """element.py - base class for all GUI elements"""
 
 import gunge
-import goo.style
+import goo
 
 
 class Element(gunge.sprite.Sprite):
@@ -12,6 +12,9 @@ class Element(gunge.sprite.Sprite):
     def __init__(self, parent, **attributes):
         """Initialize element."""
         std.sprite.Sprite.__init__(self)
+        if not isinstance(parent, goo.containers.Container):
+            raise RuntimeError("trying to attach element to non-container type '%s'" % type(parent).__name__)
+
         self.parent = parent
         self.attributes = attributes
         self.style = attributes.get('style', parent.style)
