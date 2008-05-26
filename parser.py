@@ -4,9 +4,10 @@
 
 import xml.dom.minidom as minidom
 import gunge.mv
-#import goo.widgets
+import goo
 
 PARSE_ALL = 0
+
 
 class ParseError(Exception):
     """Raised when an error occurs while parsing an xml document"""
@@ -60,10 +61,13 @@ def get_widget(node):
     Every node has an associated widget that must be built. This function fetches
     the relevant class to do so. It uses the string of the tagname to retrieve the right class.
     """
-    try:
-        return getattr(widgets, node.tagName)
-    except AttributeError:
-        raise ParseError("encountered invalid tag: '%s'" % node.tagName, node.ownerDocument.documentURI)
+    #the widget could be located in one of several modules. We'll have to try them all
+    for module in (goo.controls, goo.containers):
+        try:
+            return getattr(module, node.tagName)
+        except AttributeError:
+            continue
+    raise ParseError("encountered invalid tag: '%s'" % node.tagName, node.ownerDocument.documentURI)
  
 def get_attributes(node):
     """retrieve a dictionary of the attributes for a node"""
