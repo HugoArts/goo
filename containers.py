@@ -1,5 +1,11 @@
 #! /usr/bin/env python
 
+"""containers.py - elements that can contain other elements
+
+containers can (obviously) other elements, including other containers. Different containers
+may draw different borders or backgrounds, and can also arrange their children differently
+"""
+
 import goo
 import pygame
 
@@ -10,9 +16,9 @@ class Container(goo.element.Element):
     elements and provides a background image. The box is not resizable,
     but it is nestable.
     """
-    def __init__(self, parent, children):
+    def __init__(self, parent, children, **attributes):
         """initialize container"""
-        goo.element.Element.__init__(self, parent)
+        goo.element.Element.__init__(self, parent, **attributes)
         self.nextchild_pos = (self.style['margin'], self.style['margin'])
 
         children = [goo.parser.parse(node, self) for node in children]
@@ -61,7 +67,7 @@ class HorizontalContainer(Container):
         Note that the child may choose to adjust this for its style (e.g. alignment)
         """
         (x, y) = self.nextchild_pos
-        self.nextchild_pos = x + child.rect.width + self.style['margin'], y)
+        self.nextchild_pos = (x + child.rect.width + self.style['margin'], y)
 
     def adjust(self, child):
         """adjust the container to accomodate a child.

@@ -14,14 +14,12 @@ class Element(gunge.sprite.Sprite):
         std.sprite.Sprite.__init__(self)
         self.parent = parent
         self.attributes = attributes
+        self.style = attributes.get('style', parent.style)
+        self.id = attributes.get('id', None)
 
         gunge.event.EventManager.bindToGlobal(
             (gunge.event.KILL_OBJECT, self.onkillparent, {'object': self.parent}))
 
-        if 'style' in attributes:
-            self.style = goo.style.get(attributes['style'])
-        else:
-            self.style = parent.style
         self.create()
 
     def onkillparent(self, event):
