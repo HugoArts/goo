@@ -2,7 +2,7 @@
 
 """containers.py - elements that can contain other elements
 
-containers can (obviously) other elements, including other containers. Different containers
+containers can (obviously) contain other elements, including other containers. Different containers
 may draw different borders or backgrounds, and can also arrange their children differently
 """
 
