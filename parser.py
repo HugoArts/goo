@@ -40,14 +40,13 @@ def load_xml(filename, ids=None):
     else:
         return [parse(doc.getElementById(i)) for i in ids]
 
-def parse(node, parent=None):
+def parse(node, parent=gunge.NullParent):
     """Parse the DOM and create the widgets from it
 
-    this function takes an xml DOM node and creates a widget from it.
-    The node is attached to the parent, if specified. if the node is not attached to any parent.
-    the function hands the nodes' children to the created widget to also be parsed.
+    takes an xml DOM node and creates a widget from it.
+    The node is attached to the parent, if specified. Otherwise, the special NullParent is used.
+    the nodes' children are handed to the created widget to also be parsed.
     """
-    #TODO add some sort of Nullparent (e.g. the screen) with correct attributes so we don't end up with a headless tree
     if node.hasChildren():
         widget = get_widget(node)(parent, node.childNodes, **get_attributes(node))
     else:

@@ -24,8 +24,8 @@ class Button(Control):
             (pygame.MOUSEBUTTONUP,   self.on_mouseup,   {'button':1}))
 
         self.text = text
-        self.focus = False
         self.mouseover = False
+        self.focus = False
         self.down = False
 
     def on_mousedown(self, event):
