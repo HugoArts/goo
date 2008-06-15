@@ -11,6 +11,7 @@ The object functions like a dictionary
 DEFAULT_SURFACE = pygame.Surface((100, 100))
 DEFAULT_SURFACE.set_colorkey((0, 0, 0))
 
+#TODO: change the default options to correct ones
 # the DEFAULT_OPTIONS style options are picked if no option is set by the user
 DEFAULT_OPTIONS = {
     #container style
@@ -61,10 +62,8 @@ class Style(dict):
         arguments. If you have options in a dictionary, use extended call
         syntax: Style(**options)
         """
-        dict.__init__(self)
+        dict.__init__(self, **kwargs)
         self.name = name
-        for key, val in kwargs.iteritems():
-            self[key] = val
 
     def __setitem__(self, key, value):
         """set a style option.

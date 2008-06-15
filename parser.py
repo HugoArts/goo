@@ -40,13 +40,16 @@ def load_xml(filename, ids=None):
     else:
         return [parse(doc.getElementById(i)) for i in ids]
 
-def parse(node, parent=gunge.NullParent):
+def parse(node, parent=None):
     """Parse the DOM and create the widgets from it
 
     takes an xml DOM node and creates a widget from it.
     The node is attached to the parent, if specified. Otherwise, the special NullParent is used.
     the nodes' children are handed to the created widget to also be parsed.
     """
+    if parent is None:
+        parent = goo.NullParent
+
     if node.hasChildren():
         widget = get_widget(node)(parent, node.childNodes, **get_attributes(node))
     else:

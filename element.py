@@ -24,8 +24,6 @@ class Element(gunge.sprite.Sprite):
         gunge.event.EventManager.bindToGlobal(
             (gunge.event.KILL_OBJECT, self.onkillparent, {'object': self.parent}))
 
-        self.create()
-
     def onkillparent(self, event):
         """called when the elements' parent is killed.
 

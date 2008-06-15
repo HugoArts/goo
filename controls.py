@@ -3,13 +3,19 @@
 """controls.py - leaf elements that the user interacts with such as textboxes or buttons"""
 
 import goo.element
+import pygame
 
 
 class Control(goo.element.Element):
     """Base class for all controls"""
-    #this class might need universal functionality later, but for now its just to
-    #differentiate controls from other elements through isinstance/issubclass
-    pass
+    
+    def __init__(self, parent, **attributes):
+        """initialize the control
+        
+        all this currently does is create the element.
+        """
+        goo.element.Element.__init__(self, parent, **attributes)
+        self.create()
 
 
 #TODO make create function for the button class
@@ -27,6 +33,16 @@ class Button(Control):
         self.mouseover = False
         self.focus = False
         self.down = False
+
+    def create(self):
+        """creates the button"""
+        font = pygame.font.Font(self.style['font'], self.style['font-height'])
+        txtimg = font.render(self.text)
+        txtrect = txtimg.get_rect()
+
+        self.rect = pygame.Rect(0, 0, txtrect.width + self.style['margin'], txtrect.height + self.style['margin'])
+        self.img = pygame.Surface(self.rect.size)
+        pygame.draw.rect(self.img, self.style['border_color'], self.rect, 
 
     def on_mousedown(self, event):
         """Check if the mouse is on the button, and click if it is."""
