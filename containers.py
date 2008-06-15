@@ -43,7 +43,7 @@ class Container(goo.element.Element):
         Therefore, this function should be called with the child after the child has been created.
         """
         if child.rect.width > self.rect.width:
-            self.rect.width = child.rect.width
+            self.rect.width = child.rect.width + self.style['margin']
         self.rect.height += (child.rect.height + self.style['margin'])
 
     def create(self):
