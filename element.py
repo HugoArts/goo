@@ -4,6 +4,7 @@
 
 import gunge
 import goo
+import pygame
 
 
 class Element(gunge.sprite.Sprite):
@@ -12,7 +13,7 @@ class Element(gunge.sprite.Sprite):
     def __init__(self, parent, **attributes):
         """Initialize element."""
         gunge.sprite.Sprite.__init__(self)
-        if not isinstance(parent, goo.containers.Container):
+        if not isinstance(parent, (goo.containers.Container, goo.NullParent)):
             #TODO: create goo error
             raise RuntimeError("trying to attach element to non-container type '%s'" % type(parent).__name__)
 
@@ -69,8 +70,8 @@ class Element(gunge.sprite.Sprite):
         """
         #test if this new position is within the parent
         parent_rect = self.parent.rect
-        newrect = pygame.Rect((x + parent_rect.left, y + parent_rect.top), self.rect.size)
-        if parent_rect.size != (0,0) and not parent_rect.contains(newrect):
+        new_rect = pygame.Rect((x + parent_rect.left, y + parent_rect.top), self.rect.size)
+        if parent_rect.size != (0,0) and not parent_rect.contains(new_rect):
             #TODO create goo.Error class
             #raise goo.Error("element position out of parent bounds: (%s, %s)" % (x, y))
             raise RuntimeError("element position out of parent bounds: (%s, %s)" % (x, y))

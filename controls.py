@@ -2,7 +2,8 @@
 
 """controls.py - leaf elements that the user interacts with such as textboxes or buttons"""
 
-import goo.element
+import gunge
+import goo.element, goo.draw
 import pygame
 
 
@@ -24,25 +25,30 @@ class Button(Control):
 
     def __init__(self, parent, text, **attributes):
         """Initialize the button"""
-        Control.__init__(self, parent, **attributes)
         gunge.event.EventManager.bindToGlobal(
             (pygame.MOUSEBUTTONDOWN, self.on_mousedown, {'button':1}),
             (pygame.MOUSEBUTTONUP,   self.on_mouseup,   {'button':1}))
 
         self.text = text
+        Control.__init__(self, parent, **attributes)
+
         self.mouseover = False
         self.focus = False
         self.down = False
 
     def create(self):
         """creates the button"""
-        font = pygame.font.Font(self.style['font'], self.style['font-height'])
-        txtimg = font.render(self.text)
+        font = pygame.font.Font(self.style['font'], self.style['font_height'])
+        txtimg = font.render(self.text, True, self.style['font_color'])
         txtrect = txtimg.get_rect()
 
         self.rect = pygame.Rect(0, 0, txtrect.width + self.style['margin'], txtrect.height + self.style['margin'])
-        self.img = pygame.Surface(self.rect.size)
-        pygame.draw.rect(self.img, self.style['border_color'], self.rect, 
+        txtrect.center = self.rect.center
+        self.img = goo.draw.alpha_surface(self.rect.size)
+        goo.draw.rounded_rect(self.img, self.rect, self.style)
+        self.img.blit(txtimg, txtrect)
+
+        self.parent.adjust(self)
 
     def on_mousedown(self, event):
         """Check if the mouse is on the button, and click if it is."""
@@ -51,7 +57,7 @@ class Button(Control):
 
     def on_mouseup(self, event):
         """release the button if the mouse is released, possibly click"""
-        if not self.hidden and self.rect.collidepoint(event.pos):
+        if self.down and not self.hidden and self.rect.collidepoint(event.pos):
             self.click()
         self.down = False
 

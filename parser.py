@@ -48,9 +48,9 @@ def parse(node, parent=None):
     the nodes' children are handed to the created widget to also be parsed.
     """
     if parent is None:
-        parent = goo.NullParent
+        parent = goo.NullParent()
 
-    if node.hasChildren():
+    if node.hasChildNodes():
         widget = get_widget(node)(parent, node.childNodes, **get_attributes(node))
     else:
         widget = get_widget(node)(parent, **get_attributes(node))
@@ -75,7 +75,7 @@ def get_attributes(node):
     """retrieve a dictionary of the attributes for a node"""
     attr_map = node.attributes
     attributes = (attr_map.item(i) for i in range(attr_map.length))
-    return dict((attr.name, attr.value) for attr in attributes)
+    return dict((str(attr.name), attr.value) for attr in attributes)
 
 
 if __name__ == '__main__':

@@ -21,7 +21,7 @@ class Container(goo.element.Element):
         goo.element.Element.__init__(self, parent, **attributes)
         self.nextchild_pos = (self.style['margin'], self.style['margin'])
 
-        children = [goo.parser.parse(node, self) for node in children]
+        children = [goo.parser.parse(node, self) for node in children if node.nodeType != 3]
         self.create()
         for child in children:
             child.arrange()
@@ -50,10 +50,10 @@ class Container(goo.element.Element):
         """render the container sprite."""
         self.rect.width += self.style['margin']
         self.rect.height += self.style['margin']
-        self.img = pygame.Surface((self.rect.size))
+        self.img = goo.draw.alpha_surface((self.rect.size))
 
-        self.img.fill(self.style['background_color'])
-        pygame.draw.rect(self.img, self.style['border_color'], pygame.Rect((0,0), self.rect.size), self.style['border_width'])
+        goo.draw.rounded_rect(self.img, pygame.Rect((0,0), self.rect.size), (self.style['background_color'], 0, self.style['border_radius']))
+        goo.draw.rounded_rect(self.img, pygame.Rect((0,0), self.rect.size), self.style)
         self.parent.adjust(self)
 
 
@@ -68,6 +68,7 @@ class HorizontalContainer(Container):
         """
         (x, y) = self.nextchild_pos
         self.nextchild_pos = (x + child.rect.width + self.style['margin'], y)
+        return (x, y)
 
     def adjust(self, child):
         """adjust the container to accomodate a child.
@@ -76,5 +77,5 @@ class HorizontalContainer(Container):
         Therefore, this function should be called with the child after the child has been created.
         """
         if child.rect.height > self.rect.height:
-            self.rect.height = child.rect.height
+            self.rect.height = child.rect.height + self.style['margin']
         self.rect.width += (child.rect.width + self.style['margin'])

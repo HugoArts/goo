@@ -2,25 +2,38 @@
 
 """draw functions used to draw the controls"""
 
-import pygame
+import pygame, goo.style
 
-def rounded_rect(target_surf, rect, color, width, radius):
+def alpha_surface(*args):
+    """return a transparent surface
+
+    return a surface with per-pixel alpha, cleared to (0, 0, 0, 0) (completely transparent).
+    It takes the same arguments as pygame.Surface.
+    """
+    surface = pygame.Surface(*args)
+    surface = surface.convert_alpha()
+    surface.fill((0, 0, 0, 0))
+    return surface
+
+def rounded_rect(target_surf, rect, style):
     """draw a rounded rectangle
 
-    radius is the amount of rounding at the edges, and width is the thickness of the edges
-    if the width argument is 0, the rectangle will be filled.
+    the style argument can be either a tuple in the form of (color, width, radius) or a goo Style object 
     """
-    #set a colorkey to prevent drawing the background
+    if isinstance(style, goo.style.Style):
+        color, width, radius = style['border_color'], style['border_width'], style['border_radius']
+    else:
+        color, width, radius = style
     colorkey = (0,0,0) if color != (0,0,0) else (255, 255, 255)
-    #prepare the circle
     r = rect
+
+    #prepare the circle
     circle = pygame.Surface((radius*2, radius*2))
-    circle.convert_alpha()
     circle.fill(colorkey)
     pygame.draw.circle(circle, color, (radius, radius), radius, width)
+
     #prepare the surface
     surf = pygame.Surface(r.size)
-    surf.convert_alpha()
     surf.fill(colorkey)
     surf_rect = surf.get_rect()
     surf_rect.inflate_ip(-width+1, -width+1)

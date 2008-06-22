@@ -14,33 +14,17 @@ DEFAULT_SURFACE.set_colorkey((0, 0, 0))
 #TODO: change the default options to correct ones
 # the DEFAULT_OPTIONS style options are picked if no option is set by the user
 DEFAULT_OPTIONS = {
-    #container style
-    'container_background_color': (0, 255, 0, 100),
-    'container_border_color': (255, 0, 0, 155),
-    'container_border_width': 20,
+    'margin': 10,
 
-    # button style
-    'button_image': DEFAULT_SURFACE,
-    'button_focus': DEFAULT_SURFACE,
-    'button_click': DEFAULT_SURFACE,
-    'button_margin': 10,
+    'background_color': (200, 250, 200, 200),
 
-    # menu item style
-    'menu_item_image': DEFAULT_SURFACE,
-    'menu_item_focus': DEFAULT_SURFACE,
-    'menu_item_click': DEFAULT_SURFACE,
-    'menu_item_margin': 10,
-    'menu_margin': 30,
+    'border_color': (100, 100, 100),
+    'border_width': 1,
+    'border_radius': 5,
 
-    # slider bar style
-    'slider_bar': DEFAULT_SURFACE,
-    'slider_cap': DEFAULT_SURFACE,
-    'slider_button': DEFAULT_SURFACE,
-
-    # Text style
-    'text_font': None,
-    'text_size': 30,
-    'text_color': (0,0,0),
+    'font':        None,
+    'font_height': 20,
+    'font_color':  (0, 0, 0),
 }
 
 
@@ -104,6 +88,6 @@ def add(style):
     """
     style_dict[style.name] = style
 
-def get(name):
+def get(name='default'):
     """retrieve a style from the XML-recognised style list by its name"""
     return style_dict[name]
