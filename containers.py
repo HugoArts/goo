@@ -42,7 +42,7 @@ class Container(goo.element.Element):
         many container attributes (for example, the minimum container dimensions) depend on the children inside it.
         Therefore, this function should be called with the child after the child has been created.
         """
-        if child.rect.width > self.rect.width:
+        if child.rect.width + self.style['margin'] > self.rect.width:
             self.rect.width = child.rect.width + self.style['margin']
         self.rect.height += (child.rect.height + self.style['margin'])
 
@@ -52,12 +52,13 @@ class Container(goo.element.Element):
         self.rect.height += self.style['margin']
         self.img = goo.draw.alpha_surface((self.rect.size))
 
+        #the bottom one is the box border, the top one the box itself
         goo.draw.rounded_rect(self.img, pygame.Rect((0,0), self.rect.size), (self.style['background_color'], 0, self.style['border_radius']))
         goo.draw.rounded_rect(self.img, pygame.Rect((0,0), self.rect.size), self.style)
         self.parent.adjust(self)
 
 
-class HorizontalContainer(Container):
+class HrContainer(Container):
     """HorizontalContainer - similar to the basic container, but it arranges children horizontally"""
 
     def get_childpos(self, child):
@@ -76,6 +77,81 @@ class HorizontalContainer(Container):
         many container attributes (for example, the minimum container dimensions) depend on the children inside it.
         Therefore, this function should be called with the child after the child has been created.
         """
-        if child.rect.height > self.rect.height:
+        if child.rect.height + self.style['margin'] > self.rect.height:
             self.rect.height = child.rect.height + self.style['margin']
         self.rect.width += (child.rect.width + self.style['margin'])
+
+
+class Sizer(Container):
+    """Sizer - similar to wxPython sizers.
+
+    These are containers that don't have any decorations. This simple one is like the Container, but invisible.
+    """
+    def get_childpos(self, child):
+        """return next child position.
+
+        a sizer should not add margins around itself. To prevent that we alter get_childpos just a little
+        """
+        if self.nextchild_pos == (self.style['margin'], self.style['margin']):
+            self.nextchild_pos = (0, 0)
+        return Container.get_childpos(self, child)
+
+    def adjust(self, child):
+        """adjust for parent. Same as a container, except don't count margins"""
+        if child.rect.width > self.rect.width:
+            self.rect.width = child.rect.width
+        self.rect.height += (child.rect.height + self.style['margin'])
+
+    def create(self):
+        """adjust margin sizes
+
+        in the Container, margins are adjusted and the container is drawn. Since this Sizer is invisible,
+        Only the margins are adjusted. Of course the parent is also adjusted for this sizer.
+        """
+        self.rect.height -= self.style['margin']
+        self.parent.adjust(self)
+
+    def render(self, surface):
+        """does nothing
+
+        since the Sizer is invisible, this method does nothing
+        """
+        pass
+
+
+class HrSizer(HrContainer):
+    """HrSizer - a horizontal sizer
+
+    this is the Horizontal version of the sizer. It works the same as the Horizontal container,
+    but without the decorations.
+    """
+    def get_childpos(self, child):
+        """return next child position.
+
+        a sizer should not add margins around itself. To prevent that we alter get_childpos just a little
+        """
+        if self.nextchild_pos == (self.style['margin'], self.style['margin']):
+            self.nextchild_pos = (0, 0)
+        return HrContainer.get_childpos(self, child)
+
+    def adjust(self, child):
+        """adjust for child. same as HrContainer, but without margin"""
+        if child.rect.height > self.rect.height:
+            self.rect.height = child.rect.height
+        self.rect.width += (child.rect.width + self.style['margin'])
+
+    def create(self):
+        """adjust margin sizes
+
+        in the Container, margins are adjusted and the container is drawn. Since this Sizer is invisible,
+        Only the margins are adjusted. Of course the parent is also adjusted for this sizer.
+        """
+        self.rect.width -= self.style['margin']
+        self.parent.adjust(self)
+
+    def render(self, surface):
+        """does nothing
+
+        since the Sizer is invisible, this method does nothing
+        """
+        pass
