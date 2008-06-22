@@ -34,11 +34,21 @@ def load_xml(filename, ids=None):
         raise ParseError("Invalid GameGoo XML document: invalid root node", filename)
 
     if ids is None:
-        return parse(root.firstChild)
+        node = root.firstChild
+        while node.nodeType == 3:
+            node = node.nextSibling
+        widget = parse(node)
+        widget.arrange()
+        return widget
     elif ids is PARSE_ALL:
-        return [parse(node) for node in root.childNodes]
+        widgets = [parse(node) for node in root.childNodes if node.nodeType != 3]
     else:
-        return [parse(doc.getElementById(i)) for i in ids]
+        widgets = [parse(doc.getElementById(i)) for i in ids]
+
+    #these widgets will have no parent, and must be arranged
+    for widget in widgets:
+        widget.arrange()
+    return widgets
 
 def parse(node, parent=None):
     """Parse the DOM and create the widgets from it
