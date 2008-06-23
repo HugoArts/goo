@@ -16,11 +16,14 @@ DEFAULT_SURFACE.set_colorkey((0, 0, 0))
 DEFAULT_OPTIONS = {
     'margin': 10,
 
-    'background_color': (200, 250, 200, 200),
+    'background_color': (236, 233, 233),
 
-    'border_color': (100, 100, 100),
+    'border_color': (193, 186, 186),
     'border_width': 1,
     'border_radius': 5,
+
+    'button_hover':  (20, 100, 145),
+    'button_down':   (190, 190, 190),
 
     'font':        None,
     'font_height': 20,

@@ -24,6 +24,7 @@ def rounded_rect(target_surf, rect, style):
         color, width, radius = style['border_color'], style['border_width'], style['border_radius']
     else:
         color, width, radius = style
+    alpha = color[3] if len(color) == 4 else 255 
     colorkey = (0,0,0) if color != (0,0,0) else (255, 255, 255)
     r = rect
 
@@ -44,6 +45,7 @@ def rounded_rect(target_surf, rect, style):
     surf.blit(circle, (0, r.h - radius), pygame.Rect((0, radius), (radius, radius)))
     surf.blit(circle, (r.w - radius, 0), pygame.Rect((radius, 0), (radius, radius)))
     surf.blit(circle, (r.w - radius, r.h - radius), pygame.Rect((radius, radius), (radius, radius)))
-    surf.set_colorkey(colorkey)
 
+    surf.set_colorkey(colorkey)
+    surf.set_alpha(alpha)
     target_surf.blit(surf, rect)

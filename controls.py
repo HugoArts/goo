@@ -19,7 +19,6 @@ class Control(goo.element.Element):
         self.create()
 
 
-#TODO make create function for the button class
 class Button(Control):
     """Class for a button with some text on it that can be clicked"""
 
@@ -43,11 +42,10 @@ class Button(Control):
         txtrect = txtimg.get_rect()
 
         self.rect = pygame.Rect(0, 0, txtrect.width + self.style['margin'], txtrect.height + self.style['margin'])
-        txtrect.center = self.rect.center
         self.img = goo.draw.alpha_surface(self.rect.size)
         goo.draw.rounded_rect(self.img, self.rect, self.style)
-        self.img.blit(txtimg, txtrect)
 
+        self.txtimg = txtimg
         self.parent.adjust(self)
 
     def on_mousedown(self, event):
@@ -65,3 +63,24 @@ class Button(Control):
         """fire a BUTTONCLICK event with this button and button id if available"""
         event = pygame.event.Event(goo.BUTTONCLICK, {'button': self, 'objectid': self.id})
         pygame.event.post(event)
+
+    def update(self):
+        """update the button"""
+        Control.update(self)
+        self.mouseover = self.rect.collidepoint(pygame.mouse.get_pos())
+        self.down = self.down and self.mouseover
+
+    def render(self, surface):
+        """render the button"""
+        txtrect = self.txtimg.get_rect()
+        txtrect.center = self.rect.center
+        if self.down:
+            goo.draw.rounded_rect(surface, self.rect, (self.style['button_down'], 0, self.style['border_radius']))
+            txtrect.move_ip(0, 1)
+
+        Control.render(self, surface)
+        surface.blit(self.txtimg, txtrect)
+
+        if self.mouseover:
+            style = [self.style['button_hover'], self.style['border_width'], self.style['border_radius']+2]
+            goo.draw.rounded_rect(surface, self.rect.inflate(2*style[1], 2*style[1]), style)

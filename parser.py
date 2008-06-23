@@ -41,9 +41,9 @@ def load_xml(filename, ids=None):
         widget.arrange()
         return widget
     elif ids is PARSE_ALL:
-        widgets = [parse(node) for node in root.childNodes if node.nodeType != 3]
+        widgets = tuple(parse(node) for node in root.childNodes if node.nodeType != 3)
     else:
-        widgets = [parse(doc.getElementById(i)) for i in ids]
+        widgets = tuple(parse(doc.getElementById(i)) for i in ids)
 
     #these widgets will have no parent, and must be arranged
     for widget in widgets:
