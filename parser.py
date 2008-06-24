@@ -59,11 +59,12 @@ def parse(node, parent=None):
     """
     if parent is None:
         parent = goo.NullParent()
+    widget, node = get_widget(node)
 
-    if node.hasChildNodes():
-        widget = get_widget(node)(parent, node.childNodes, **get_attributes(node))
+    if issubclass(widget, goo.containers.Container):
+        widget = widget(parent, node.childNodes, **get_attributes(node))
     else:
-        widget = get_widget(node)(parent, **get_attributes(node))
+        widget = widget(parent, **get_attributes(node))
     gunge.mv.ModelView.get_global().add(widget)
     return widget
 
@@ -76,10 +77,11 @@ def get_widget(node):
     #the widget could be located in one of several modules. We'll have to try them all
     for module in (goo.controls, goo.containers):
         try:
-            return getattr(module, node.tagName)
+            return getattr(module, node.tagName), node
         except AttributeError:
             continue
-    raise ParseError("encountered invalid tag: '%s'" % node.tagName, node.ownerDocument.documentURI)
+    #not a built-in widget, try returning a composite
+    return goo.composite.get(node.tagName)
  
 def get_attributes(node):
     """retrieve a dictionary of the attributes for a node"""
