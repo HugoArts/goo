@@ -3,6 +3,7 @@
 """draw functions used to draw the controls"""
 
 import pygame, goo.style
+import math
 
 def alpha_surface(*args):
     """return a transparent surface
@@ -28,11 +29,9 @@ def circle(target_surf, color, pos, radius, width=0):
     if width > 0:
         pygame.draw.circle(s, colorkey, (radius, radius), radius - width)
 
-    r = pygame.Rect(0, 0, radius*2, radius*2)
-    r.center = pos
     s.set_colorkey(colorkey)
     s.set_alpha(alpha)
-    target_surf.blit(s, r)
+    target_surf.blit(s, (pos[0] - radius, pos[1] - radius))
 
 def rounded_rect(target_surf, rect, style, draw_circle=pygame.draw.circle):
     """draw a rounded rectangle
