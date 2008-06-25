@@ -50,7 +50,7 @@ class Container(goo.element.Element):
         """render the container sprite."""
         self.rect.width += self.style['margin']
         self.rect.height += self.style['margin']
-        self.img = goo.draw.alpha_surface((self.rect.size))
+        self.img = goo.draw.alpha_surface(self.rect.size)
 
         #the bottom one is the box border, the top one the box itself
         goo.draw.rounded_rect(self.img, pygame.Rect((0,0), self.rect.size), (self.style['background_color'], 0, self.style['border_radius']))
