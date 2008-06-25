@@ -15,7 +15,26 @@ def alpha_surface(*args):
     surface.fill((0, 0, 0, 0))
     return surface
 
-def rounded_rect(target_surf, rect, style):
+def circle(target_surf, color, pos, radius, width=0):
+    """draw a circle
+
+    drawing a circle with a width other than zero has weird results on my machine. Therefore this alternate method
+    """
+    alpha = color[3] if len(color) == 4 else 255
+    colorkey = (0, 0, 0) if color[:3] != (0, 0, 0) else (255, 255, 255)
+    s = pygame.Surface((radius*2, radius*2))
+    s.fill(colorkey)
+    pygame.draw.circle(s, color, (radius, radius), radius)
+    if width > 0:
+        pygame.draw.circle(s, colorkey, (radius, radius), radius - width)
+
+    r = pygame.Rect(0, 0, radius*2, radius*2)
+    r.center = pos
+    s.set_colorkey(colorkey)
+    s.set_alpha(alpha)
+    target_surf.blit(s, r)
+
+def rounded_rect(target_surf, rect, style, draw_circle=pygame.draw.circle):
     """draw a rounded rectangle
 
     the style argument can be either a tuple in the form of (color, width, radius) or a goo Style object 
@@ -25,13 +44,13 @@ def rounded_rect(target_surf, rect, style):
     else:
         color, width, radius = style
     alpha = color[3] if len(color) == 4 else 255 
-    colorkey = (0,0,0) if color != (0,0,0) else (255, 255, 255)
+    colorkey = (0,0,0) if color[:3] != (0,0,0) else (255, 255, 255)
     r = rect
 
     #prepare the circle
-    circle = pygame.Surface((radius*2, radius*2))
-    circle.fill(colorkey)
-    pygame.draw.circle(circle, color, (radius, radius), radius, width)
+    circ = pygame.Surface((radius*2, radius*2))
+    circ.fill(colorkey)
+    draw_circle(circ, color, (radius, radius), radius, width)
 
     #prepare the surface
     surf = pygame.Surface(r.size)
@@ -41,10 +60,10 @@ def rounded_rect(target_surf, rect, style):
 
     #draw the rectangle and circle corners
     pygame.draw.rect(surf, color, surf_rect, width)
-    surf.blit(circle, (0, 0), pygame.Rect((0, 0), (radius, radius)))
-    surf.blit(circle, (0, r.h - radius), pygame.Rect((0, radius), (radius, radius)))
-    surf.blit(circle, (r.w - radius, 0), pygame.Rect((radius, 0), (radius, radius)))
-    surf.blit(circle, (r.w - radius, r.h - radius), pygame.Rect((radius, radius), (radius, radius)))
+    surf.blit(circ, (0, 0), pygame.Rect((0, 0), (radius, radius)))
+    surf.blit(circ, (0, r.h - radius), pygame.Rect((0, radius), (radius, radius)))
+    surf.blit(circ, (r.w - radius, 0), pygame.Rect((radius, 0), (radius, radius)))
+    surf.blit(circ, (r.w - radius, r.h - radius), pygame.Rect((radius, radius), (radius, radius)))
 
     surf.set_colorkey(colorkey)
     surf.set_alpha(alpha)
