@@ -19,11 +19,11 @@ def alpha_surface(*args):
 def circle(target_surf, color, pos, radius, width=0):
     """draw a circle
 
-    drawing a circle with a width other than zero has weird results on my machine. Therefore this alternate method
+    drawing a circle with a width other than zero has weird results. Therefore this alternate method
     """
     alpha = color[3] if len(color) == 4 else 255
     colorkey = (0, 0, 0) if color[:3] != (0, 0, 0) else (255, 255, 255)
-    s = pygame.Surface((radius*2, radius*2))
+    s = pygame.Surface((radius*2+2, radius*2+2))
     s.fill(colorkey)
     pygame.draw.circle(s, color, (radius, radius), radius)
     if width > 0:
@@ -33,15 +33,17 @@ def circle(target_surf, color, pos, radius, width=0):
     s.set_alpha(alpha)
     target_surf.blit(s, (pos[0] - radius, pos[1] - radius))
 
-def rounded_rect(target_surf, rect, style, draw_circle=pygame.draw.circle):
+def rounded_rect(target_surf, rect, style):
     """draw a rounded rectangle
 
     the style argument can be either a tuple in the form of (color, width, radius) or a goo Style object 
     """
+    #select best possible draw function
     if isinstance(style, goo.style.Style):
         color, width, radius = style['border_color'], style['border_width'], style['border_radius']
     else:
         color, width, radius = style
+    draw_circle = pygame.draw.circle if width <= 1 else circle
     alpha = color[3] if len(color) == 4 else 255 
     colorkey = (0,0,0) if color[:3] != (0,0,0) else (255, 255, 255)
     r = rect
