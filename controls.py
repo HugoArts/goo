@@ -77,10 +77,12 @@ class Button(Control):
         if self.down:
             goo.draw.rounded_rect(surface, self.rect, (self.style['button_down'], 0, self.style['border_radius']))
             txtrect.move_ip(0, 1)
+        elif self.mouseover:
+            goo.draw.rounded_rect(surface, self.rect, (self.style['button_hover'], 0, self.style['border_radius']))
 
         Control.render(self, surface)
         surface.blit(self.txtimg, txtrect)
 
         if self.mouseover:
-            style = [self.style['button_hover'], self.style['border_width'], self.style['border_radius']+2]
+            style = [self.style['border_hover'], self.style['border_width'], self.style['border_radius']+2]
             goo.draw.rounded_rect(surface, self.rect.inflate(2*style[1], 2*style[1]), style)
