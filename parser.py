@@ -28,30 +28,49 @@ def load_xml(filename, ids=None):
     list of IDs, or pass in goo.parser.PARSE_ALL to build all widgets. A list of the built
     widgets is returned. If no ids argument is given, only the first widget is built.
     """
-    doc = minidom.parse(filename)
-    root = doc.documentElement
-    if root.tagName != "gamegoo":
-        raise ParseError("Invalid GameGoo XML document: invalid root node", filename)
+    root = get_root(filename)
 
     if ids is None:
-        node = root.firstChild
-        while node.nodeType == 3:
-            node = node.nextSibling
-        widget = parse(node)
-        widget.arrange()
-        return widget
+        return parse_firstchild(root)
     elif ids is PARSE_ALL:
-        widgets = tuple(parse(node) for node in root.childNodes if node.nodeType != 3)
+        return parse_all(root)
     else:
-        widgets = tuple(parse(doc.getElementById(i)) for i in ids)
+        return parse_ids(root, ids)
 
-    #these widgets will have no parent, and must be arranged
+def get_root(filename):
+    """get the root element of an xml document"""
+    dom = minidom.parse(filename)
+    root = dom.documentElement
+    if root.tagName != "gamegoo":
+        raise ParseError("Invalid GameGoo XML document: invalid root node", filename)
+    return root
+
+def parse_firstchild(rootnode):
+    """parse the first child of some node"""
+    node = rootnode.firstChild
+    while node.nodeType == 3:
+        node = node.nextSibling
+    widget = parse(node)
+    widget.arrange()
+    return widget
+
+def parse_all(rootnode):
+    """parse all children of a node"""
+    widgets = tuple(parse(node) for node in rootnode.childNodes if nodetype != 3)
+    for widget in widgets:
+        widget.arrange()
+    return widgets
+
+def parse_ids(rootnode, id_list):
+    """parse all children of a node with an id in id_list"""
+    doc = rootnode.ownerDocument
+    widgets = tuple(parse(doc.getElementbyId(id_)) for id_ in id_list)
     for widget in widgets:
         widget.arrange()
     return widgets
 
 def parse(node, parent=None):
-    """Parse the DOM and create the widgets from it
+    """Parse a DOM node and create a widget from it
 
     takes an xml DOM node and creates a widget from it.
     The node is attached to the parent, if specified. Otherwise, the special NullParent is used.
@@ -59,7 +78,7 @@ def parse(node, parent=None):
     """
     if parent is None:
         parent = goo.NullParent()
-    widget, node = get_widget(node)
+    widget = get_widget(node)
 
     if issubclass(widget, goo.containers.Container):
         widget = widget(parent, node.childNodes, **get_attributes(node))
@@ -75,21 +94,16 @@ def get_widget(node):
     the relevant class to do so. It uses the string of the tagname to retrieve the right class.
     """
     #the widget could be located in one of several modules. We'll have to try them all
-    for module in (goo.controls, goo.containers):
+    for module in (goo.controls, goo.containers, goo.composite):
         try:
-            return getattr(module, node.tagName), node
+            return getattr(module, node.tagName)
         except AttributeError:
             continue
-    #not a built-in widget, try returning a composite
-    return goo.composite.get(node.tagName)
- 
+    #not a registered widget, error
+    raise ParseError("encountered invalid tag: '%s'" % node.tagName)
+
 def get_attributes(node):
     """retrieve a dictionary of the attributes for a node"""
     attr_map = node.attributes
     attributes = (attr_map.item(i) for i in range(attr_map.length))
     return dict((str(attr.name), attr.value) for attr in attributes)
-
-
-if __name__ == '__main__':
-    example = """<rootnode attr="4" second="3"><firstchild /><secondchild atrr="5" /></rootnode>"""
-    parse(minidom.parseString(example).documentElement)
