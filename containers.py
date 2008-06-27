@@ -16,25 +16,32 @@ class Container(goo.element.Element):
     elements and provides a background image. The box is not resizable,
     but it is nestable.
     """
-    def __init__(self, parent, children, **attributes):
+    def __init__(self, parent, children, size=(0, 0), **attributes):
         """initialize container"""
         goo.element.Element.__init__(self, parent, **attributes)
-        self.nextchild_pos = (self.style['margin'], self.style['margin'])
+        self.nextchild_pos = [self.style['margin'], self.style['margin']]
+        self.rect.size = size if size == (0, 0) else tuple(int(e) for e in size.split(','))
+        self.min_width, self.min_height = (0, 0)
 
-        children = [goo.parser.parse(node, self) for node in children if node.nodeType != 3]
+        self.children = [goo.parser.parse(node, self) for node in children if node.nodeType != 3]
         self.create()
-        for child in children:
-            child.arrange()
+        self.arrange_children()
 
-    def get_childpos(self, child):
-        """get a suitable position for a child element.
+    def arrange_children(self):
+        """arrange the children of this container
 
-        This is used when the child is arranging itself. The container gives it a suitable position.
-        Note that the child may choose to adjust this for its style (e.g. alignment)
+        calls the arrange function for each of the containers children, with a rectangle as argument.
+        Within that rectangle, the child is free to position itself. When done, the child must return a rectangle
+        representing the actual space it is occupying, so that the container can give a suitable area to the next child
         """
-        (x, y) = self.nextchild_pos
-        self.nextchild_pos = (x, y + child.rect.height + self.style['margin'])
-        return (x, y)
+        for i, child in enumerate(self.children):
+            width = self.rect.width - self.nextchild_pos[0] - self.style['margin']
+
+            height = self.rect.height - self.nextchild_pos[1] - sum(c.rect.height for c in self.children[i+1:])
+            height -= ((len(self.children[i+1:]) + 1) * self.style['margin'])
+
+            area = child.arrange(pygame.Rect(self.nextchild_pos, (width, height)))
+            self.nextchild_pos[1] = (area.bottom + self.style['margin'])
 
     def adjust(self, child):
         """adjust the container to accomodate a child.
@@ -42,34 +49,46 @@ class Container(goo.element.Element):
         many container attributes (for example, the minimum container dimensions) depend on the children inside it.
         Therefore, this function should be called with the child after the child has been created.
         """
-        if child.rect.width + self.style['margin'] > self.rect.width:
-            self.rect.width = child.rect.width + self.style['margin']
-        self.rect.height += (child.rect.height + self.style['margin'])
+        if child.rect.width + self.style['margin'] > self.min_width:
+            self.min_width = child.rect.width + self.style['margin']
+        self.min_height += (child.rect.height + self.style['margin'])
 
     def create(self):
         """render the container sprite."""
-        self.rect.width += self.style['margin']
-        self.rect.height += self.style['margin']
-        self.img = goo.draw.alpha_surface(self.rect.size)
+        self.min_width += self.style['margin']
+        self.min_height += self.style['margin']
+        if self.rect.width < self.min_width:
+            self.rect.width = self.min_width
+        if self.rect.height < self.min_height:
+            self.rect.height = self.min_height
 
-        #the bottom one is the box border, the top one the box itself
-        goo.draw.rounded_rect(self.img, pygame.Rect((0,0), self.rect.size), (self.style['background_color'], 0, self.style['border_radius']))
-        goo.draw.rounded_rect(self.img, pygame.Rect((0,0), self.rect.size), self.style)
         self.parent.adjust(self)
+
+    def render(self, surface):
+        """render container decorations to the screen"""
+        #the bottom one is the box border, the top one the box itself
+        goo.draw.rounded_rect(surface, self.rect, (self.style['background_color'], 0, self.style['border_radius']))
+        goo.draw.rounded_rect(surface, self.rect, self.style)
 
 
 class HrContainer(Container):
     """HorizontalContainer - similar to the basic container, but it arranges children horizontally"""
 
-    def get_childpos(self, child):
-        """get a suitable position for a child element.
+    def arrange_children(self):
+        """arrange the children of this container
 
-        This is used when the child is arranging itself. The container gives it a suitable position.
-        Note that the child may choose to adjust this for its style (e.g. alignment)
+        calls the arrange function for each of the containers children, with a rectangle as argument.
+        Within that rectangle, the child is free to position itself. When done, the child must return a rectangle
+        representing the actual space it is occupying, so that the container can give a suitable area to the next child
         """
-        (x, y) = self.nextchild_pos
-        self.nextchild_pos = (x + child.rect.width + self.style['margin'], y)
-        return (x, y)
+        for i, child in enumerate(self.children):
+            height = self.rect.height - self.nextchild_pos[1] - self.style['margin']
+
+            width = self.rect.width - self.nextchild_pos[0] - sum(c.rect.width for c in self.children[i+1:])
+            width -= ((len(self.children[i+1:]) + 1) * self.style['margin'])
+
+            area = child.arrange(pygame.Rect(self.nextchild_pos, (width, height)))
+            self.nextchild_pos[0] = (area.right + self.style['margin'])
 
     def adjust(self, child):
         """adjust the container to accomodate a child.
@@ -77,9 +96,9 @@ class HrContainer(Container):
         many container attributes (for example, the minimum container dimensions) depend on the children inside it.
         Therefore, this function should be called with the child after the child has been created.
         """
-        if child.rect.height + self.style['margin'] > self.rect.height:
-            self.rect.height = child.rect.height + self.style['margin']
-        self.rect.width += (child.rect.width + self.style['margin'])
+        if child.rect.height + self.style['margin'] > self.min_height:
+            self.min_height = child.rect.height + self.style['margin']
+        self.min_width += (child.rect.width + self.style['margin'])
 
 
 class Sizer(Container):
@@ -87,14 +106,22 @@ class Sizer(Container):
 
     These are containers that don't have any decorations. This simple one is like the Container, but invisible.
     """
-    def get_childpos(self, child):
-        """return next child position.
+    def arrange_children(self):
+        """arrange the children of this container
 
-        a sizer should not add margins around itself. To prevent that we alter get_childpos just a little
+        calls the arrange function for each of the containers children, with a rectangle as argument.
+        Within that rectangle, the child is free to position itself. When done, the child must return a rectangle
+        representing the actual space it is occupying, so that the container can give a suitable area to the next child
         """
-        if self.nextchild_pos == (self.style['margin'], self.style['margin']):
-            self.nextchild_pos = (0, 0)
-        return Container.get_childpos(self, child)
+        self.nextchild_pos = [0, 0]
+        for i, child in enumerate(self.children):
+            width = self.rect.width - self.nextchild_pos[0] - self.style['margin']
+
+            height = self.rect.height - self.nextchild_pos[1] - sum(c.rect.height for c in self.children[i+1:])
+            height -= (len(self.children[i+1:]) * self.style['margin'])
+
+            area = child.arrange(pygame.Rect(self.nextchild_pos, (width, height)))
+            self.nextchild_pos[1] = (area.bottom + self.style['margin'])
 
     def adjust(self, child):
         """adjust for parent. Same as a container, except don't count margins"""
@@ -125,6 +152,23 @@ class HrSizer(HrContainer):
     this is the Horizontal version of the sizer. It works the same as the Horizontal container,
     but without the decorations.
     """
+    def arrange_children(self):
+        """arrange the children of this container
+
+        calls the arrange function for each of the containers children, with a rectangle as argument.
+        Within that rectangle, the child is free to position itself. When done, the child must return a rectangle
+        representing the actual space it is occupying, so that the container can give a suitable area to the next child
+        """
+        self.nextchild_pos = [0, 0]
+        for i, child in enumerate(self.children):
+            height = self.rect.height - self.nextchild_pos[1] - self.style['margin']
+
+            width = self.rect.width - self.nextchild_pos[0] - sum(c.rect.width for c in self.children[i+1:])
+            width -= ((len(self.children[i+1:])) * self.style['margin'])
+
+            area = child.arrange(pygame.Rect(self.nextchild_pos, (width, height)))
+            self.nextchild_pos[0] = (area.right + self.style['margin'])
+
     def get_childpos(self, child):
         """return next child position.
 

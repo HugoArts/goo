@@ -38,9 +38,15 @@ class Element(gunge.sprite.Sprite):
         """creates the element sprite and rect"""
         raise NotImplementedError("class '%s' does not implement create()" % type(self).__name__)
 
-    def arrange(self):
-        """arranges the element inside its parent"""
-        self.pos = self.parent.get_childpos(self)
+    def arrange(self, area):
+        """arranges the element inside its parent
+
+        the argument passed in is the area the element has been allotted, as a pygame.Rect. The actual area occupied must
+        be returned, so that the parent can place other elements correctly. Note that the position of the area rectangle
+        is relative to the parent, so basically what must be returned after arranging is pygame.Rect(self.pos, self.rect.size)
+        """
+        self.pos = area.topleft
+        return pygame.Rect(self.pos, self.rect.size)
 
     def update(self):
         """update element (recalculate absolute position if parent has moved)"""

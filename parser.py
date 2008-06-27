@@ -3,6 +3,7 @@
 """parser.py: parse the xml documents into actual GUI elements"""
 
 import xml.dom.minidom as minidom
+import pygame
 import gunge.mv
 import goo
 
@@ -51,14 +52,14 @@ def parse_firstchild(rootnode):
     while node.nodeType == 3:
         node = node.nextSibling
     widget = parse(node)
-    widget.arrange()
+    widget.arrange(pygame.Rect(10, 10, 0, 0))
     return widget
 
 def parse_all(rootnode):
     """parse all children of a node"""
     widgets = tuple(parse(node) for node in rootnode.childNodes if nodetype != 3)
     for widget in widgets:
-        widget.arrange()
+        widget.arrange(pygame.Rect(10, 10, 0, 0))
     return widgets
 
 def parse_ids(rootnode, id_list):
@@ -66,7 +67,7 @@ def parse_ids(rootnode, id_list):
     doc = rootnode.ownerDocument
     widgets = tuple(parse(doc.getElementbyId(id_)) for id_ in id_list)
     for widget in widgets:
-        widget.arrange()
+        widget.arrange(pygame.Rect(10, 10, 0, 0))
     return widgets
 
 def parse(node, parent=None):
