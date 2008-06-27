@@ -46,6 +46,11 @@ class Element(gunge.sprite.Sprite):
         is relative to the parent, so basically what must be returned after arranging is pygame.Rect(self.pos, self.rect.size)
         """
         self.pos = area.topleft
+        for attr, arg in self.attributes.items():
+            try:
+                getattr(goo.style, attr)(self, area, arg)
+            except AttributeError, e:
+                continue
         return pygame.Rect(self.pos, self.rect.size)
 
     def update(self):

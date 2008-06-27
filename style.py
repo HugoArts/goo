@@ -96,3 +96,45 @@ def add(style):
 def get(name='default'):
     """retrieve a style from the XML-recognised style list by its name"""
     return style_dict[name]
+
+def align(element, area, arg):
+    """align the element in the given area
+
+    the argument can be either 'left', 'right', or 'center'
+    """
+    if arg == "left":
+        element.pos = area.left, element.pos[1]
+    elif arg == "right":
+        element.pos = area.right - element.rect.width, element.pos[1]
+    elif arg == "center":
+        element.pos = area.centerx - (element.rect.width / 2), element.pos[1]
+    else:
+        raise RuntimeError("Invalid value of attribute align: %s" % arg)
+
+def valign(element, area, arg):
+    """align the element vertically in the given area
+
+    same as align, but vertical. The argument can be one of: 'top', 'bottom', 'center'
+    """
+    if arg == "top":
+        element.pos = element.pos[0], area.top
+    elif arg == "bottom":
+        element.pos = element.pos[0], area.bottom - element.rect.height
+    elif arg == "center":
+        element.pos = element.pos[0], area.centery - (element.rect.height / 2)
+    else:
+        raise RuntimeError("Invalid value of attribute valign: %s" % arg)
+
+def expand(element, area, arg):
+    """expand the element to cover all available space
+
+    argument can be either True or False. Of course, the false case is default,
+    so rather pointless, but it's there for the sake of consistency
+    """
+    if arg == "True":
+        element.pos = area.topleft
+        element.rect.size = area.size
+        #we've changed our size! better rearrange children
+        element.arrange_children()
+    elif arg != "False":
+        raise RuntimeError("Invalid value of attribute expand: %s" % arg)

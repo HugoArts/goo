@@ -19,7 +19,6 @@ class Container(goo.element.Element):
     def __init__(self, parent, children, size=(0, 0), **attributes):
         """initialize container"""
         goo.element.Element.__init__(self, parent, **attributes)
-        self.nextchild_pos = [self.style['margin'], self.style['margin']]
         self.rect.size = size if size == (0, 0) else tuple(int(e) for e in size.split(','))
         self.min_width, self.min_height = (0, 0)
 
@@ -34,6 +33,7 @@ class Container(goo.element.Element):
         Within that rectangle, the child is free to position itself. When done, the child must return a rectangle
         representing the actual space it is occupying, so that the container can give a suitable area to the next child
         """
+        self.nextchild_pos = [self.style['margin'], self.style['margin']]
         for i, child in enumerate(self.children):
             width = self.rect.width - self.nextchild_pos[0] - self.style['margin']
 
@@ -81,6 +81,7 @@ class HrContainer(Container):
         Within that rectangle, the child is free to position itself. When done, the child must return a rectangle
         representing the actual space it is occupying, so that the container can give a suitable area to the next child
         """
+        self.nextchild_pos = [self.style['margin'], self.style['margin']]
         for i, child in enumerate(self.children):
             height = self.rect.height - self.nextchild_pos[1] - self.style['margin']
 
@@ -115,7 +116,7 @@ class Sizer(Container):
         """
         self.nextchild_pos = [0, 0]
         for i, child in enumerate(self.children):
-            width = self.rect.width - self.nextchild_pos[0] - self.style['margin']
+            width = self.rect.width - self.nextchild_pos[0]
 
             height = self.rect.height - self.nextchild_pos[1] - sum(c.rect.height for c in self.children[i+1:])
             height -= (len(self.children[i+1:]) * self.style['margin'])
@@ -161,7 +162,7 @@ class HrSizer(HrContainer):
         """
         self.nextchild_pos = [0, 0]
         for i, child in enumerate(self.children):
-            height = self.rect.height - self.nextchild_pos[1] - self.style['margin']
+            height = self.rect.height - self.nextchild_pos[1]
 
             width = self.rect.width - self.nextchild_pos[0] - sum(c.rect.width for c in self.children[i+1:])
             width -= ((len(self.children[i+1:])) * self.style['margin'])
