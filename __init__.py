@@ -14,9 +14,14 @@ import goo.parser
 import goo.draw
 
 
-import pygame, gunge.event
+import pygame, gunge
 
+#prepare image loader for goo internal resources
+img_loader = gunge.media.ImageLoader("goo/images", False)
+
+#prepare goo event types
 BUTTONCLICK = gunge.event.USEREVENT + 1
+
 
 class NullParent:
     """A dummy parent.
@@ -40,4 +45,4 @@ class NullParent:
         """returns (10, 10)"""
         return (10, 10)
 
-del pygame
+del pygame, gunge

@@ -17,15 +17,13 @@ DEFAULT_OPTIONS = {
     'margin': 10,
 
     'background_color': (236, 233, 233),
+    'hover_color':      (225, 230, 240),
+    'clicked_color':    (200, 200, 200),
 
     'border_color': (193, 186, 186),
     'border_hover': (20, 100, 145),
     'border_width': 1,
     'border_radius': 5,
-
-    'button_hover': (225, 230, 240),
-    'button_down':  (200, 200, 200),
-    'button_color': (0, 0, 0, 0),
 
     'font':        None,
     'font_height': 20,
