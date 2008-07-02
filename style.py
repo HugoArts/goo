@@ -15,6 +15,7 @@ DEFAULT_SURFACE.set_colorkey((0, 0, 0))
 # the DEFAULT_OPTIONS style options are picked if no option is set by the user
 DEFAULT_OPTIONS = {
     'margin': 10,
+    'padding': 12,
 
     'background_color': (236, 233, 233),
     'hover_color':      (225, 230, 240),
@@ -49,7 +50,9 @@ class Style(dict):
         arguments. If you have options in a dictionary, use extended call
         syntax: Style(**options)
         """
-        dict.__init__(self, **kwargs)
+        dict.__init__(self)
+        for key, value in kwargs.items():
+            self[key] = value
         self.name = name
 
     def __setitem__(self, key, value):
