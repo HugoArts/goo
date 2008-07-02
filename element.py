@@ -19,7 +19,7 @@ class Element(gunge.sprite.Sprite):
 
         self.parent = parent
         self.attributes = attributes
-        self.style = goo.style.get(attributes['style']) if attributes.has_key('style') else parent.style
+        self.style = goo.style.get(attributes['style'] if attributes.has_key('style') else "default")
         self.id = attributes.get('id', None)
 
         gunge.event.EventManager.bindToGlobal(
@@ -86,7 +86,7 @@ class Element(gunge.sprite.Sprite):
             #TODO create goo.Error class
             #raise goo.Error("element position out of parent bounds: (%s, %s)" % (x, y))
             print (x, y), parent_rect
-            raise RuntimeError("element position out of parent bounds: (%s, %s)" % (x, y))
+            raise RuntimeError("element position out of parent bounds: (%s, %s), %s" % (x, y, self))
 
         #set new position relative and absolute
         self._pos = (x, y)

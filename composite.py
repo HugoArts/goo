@@ -15,8 +15,13 @@ class Composite(goo.containers.Sizer):
         """initialize this composite widget"""
         self.childnodes = children
         children = goo.parser.get_root(os.path.join(file_path, source)).childNodes
-        goo.containers.Sizer.__init__(self, parent, children, **attributes)
-
+        for node in children:
+            if node.nodeType not in (3, 8):
+                new_attributes = goo.parser.get_attributes(node)
+                new_attributes.update(attributes)
+                print new_attributes
+                break
+        goo.containers.Sizer.__init__(self, parent, children, **new_attributes)
 
 class Content(object):
     """return tag from original file with type and name

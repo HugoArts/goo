@@ -19,6 +19,17 @@ import pygame, gunge
 #prepare image loader for goo internal resources
 img_loader = gunge.media.ImageLoader("goo/images", False)
 
+goo.style.add(goo.style.Style("default_titlebar",
+    margin           = 5,
+    padding          = 3,
+    border_color     = (0, 0, 0, 0),
+    background_color = (0, 140, 215),))
+
+goo.style.add(goo.style.Style("default_sizer",
+    padding          = 0,
+    border_color     = (0, 0, 0, 0),
+    background_color = (0, 0, 0, 0)))
+
 #prepare goo event types
 BUTTONCLICK = gunge.event.USEREVENT + 1
 
