@@ -19,7 +19,6 @@ class Composite(goo.containers.Sizer):
             if node.nodeType not in (3, 8):
                 new_attributes = goo.parser.get_attributes(node)
                 new_attributes.update(attributes)
-                print new_attributes
                 break
         goo.containers.Sizer.__init__(self, parent, children, **new_attributes)
 

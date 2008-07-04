@@ -80,7 +80,6 @@ class HrContainer(Container):
         goo.element.Element.__init__(self, parent, **attributes)
         self.min_width, self.min_height = (self.style['padding'] - self.style['margin'], 0)
         Container.__init__(self, parent, children, size, **attributes)
-        print self.style['margin'], self
 
     def arrange_children(self):
         """arrange the children of this container
