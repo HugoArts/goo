@@ -6,7 +6,6 @@ import xml.dom.minidom as minidom
 import os
 import goo.parser, goo.containers
 
-file_path = ""
 
 class Composite(goo.containers.Sizer):
     """Responsible for loading widgets from xml files and using them as children"""
@@ -14,13 +13,14 @@ class Composite(goo.containers.Sizer):
     def __init__(self, parent, children, source, **attributes):
         """initialize this composite widget"""
         self.childnodes = children
-        children = goo.parser.get_root(os.path.join(file_path, source)).childNodes
+        children = goo.parser.get_root(goo.xml_loader[source]).childNodes
         for node in children:
             if node.nodeType not in (3, 8):
                 new_attributes = goo.parser.get_attributes(node)
                 new_attributes.update(attributes)
                 break
         goo.containers.Sizer.__init__(self, parent, children, **new_attributes)
+
 
 class Content(object):
     """return tag from original file with type and name
@@ -62,3 +62,29 @@ class Content(object):
         for node in parent.childnodes:
             if node.nodeType != 3:
                 return node
+
+
+class TitleBar(Composite):
+    """a window titlebar, must have a Frame as parent"""
+
+    def __init__(self, parent, children, **attributes):
+        """init TitleBar"""
+        #if not isinstance(parent, Frame):
+        #    raise RuntimeError("parent of titlebar is not a TopLevelWindow")
+        Composite.__init__(self, parent, children, "titlebar.xml", **attributes)
+
+        self.Bind(goo.BUTTONCLICK, self.on_minimize, {'button': 1, 'id': 'mini_window'})
+        self.Bind(goo.BUTTONCLICK, self.on_minimize, {'button': 1, 'id': 'maxi_window'})
+        self.Bind(goo.BUTTONCLICK, self.on_minimize, {'button': 1, 'id': 'exit_window'})
+
+    def on_minimize(self, event):
+        """minimize the window"""
+        pass
+
+    def on_maximize(self, event):
+        """maximize the window"""
+        pass
+
+    def on_close(self, event):
+        """close window"""
+        pass

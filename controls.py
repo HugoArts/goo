@@ -122,7 +122,7 @@ class IconButton(BaseButton):
 
     def create(self):
         """create the IconButton"""
-        self.icon = goo.img_loader.locate(self.image)
+        self.icon = goo.img_loader[self.image]
         icon_r = self.icon.get_rect()
 
         self.rect = pygame.Rect(0, 0, icon_r.width + self.style['margin'], icon_r.height + self.style['margin'])

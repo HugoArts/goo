@@ -1,0 +1,15 @@
+<!--
+Layout file for the TitleBar element
+Content tags: title
+-->
+
+<gamegoo>
+  <HrSizer expand="True" style="default_titlebar">
+    <!--<Content type="Icon" align="left"/>-->
+    <!--<Content type="Text" align="center"/>-->
+
+    <IconButton id="mini_window" image="minimize.png" align="right"/>
+    <IconButton id="maxi_window" image="maximize.png" align="right"/>
+    <IconButton id="exit_window" image="close.png"    align="right"/>
+  </HrSizer>
+</gamegoo>

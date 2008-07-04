@@ -18,6 +18,7 @@ import pygame, gunge
 
 #prepare image loader for goo internal resources
 img_loader = gunge.media.ImageLoader("goo/images", False)
+xml_loader = gunge.media.ResourceLoader(("goo/xml", "."), False)
 
 goo.style.add(goo.style.Style("default_titlebar",
     margin           = 5,
