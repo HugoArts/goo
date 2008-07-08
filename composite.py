@@ -3,8 +3,11 @@
 """responsible for loading and keeping all the composite widgets"""
 
 import xml.dom.minidom as minidom
+import goo.containers
+import goo.parser
+import pygame
+import gunge
 import os
-import goo.parser, goo.containers
 
 
 class Composite(goo.containers.Sizer):
@@ -33,8 +36,11 @@ class Content(object):
     def __new__(cls, parent, tagtype=None, **attributes):
         composite = cls.find_composite(parent)
         node = cls.find_firstnode(composite)
-        if node.tagName != tagtype:
-            raise RuntimeError("tag to replace Content tag has wrong type: '%s'" % node.tagName)
+        if node is None or node.tagName != tagtype:
+            if attributes.get('optional') == "True":
+                return None
+            else:
+                raise RuntimeError("tag to replace Content tag has wrong type: '%s'" % node.tagName)
 
         widget = goo.parser.get_widget(node)
         new_attributes = goo.parser.get_attributes(node)
@@ -73,9 +79,10 @@ class TitleBar(Composite):
         #    raise RuntimeError("parent of titlebar is not a TopLevelWindow")
         Composite.__init__(self, parent, children, "titlebar.xml", **attributes)
 
-        self.Bind(goo.BUTTONCLICK, self.on_minimize, {'button': 1, 'id': 'mini_window'})
-        self.Bind(goo.BUTTONCLICK, self.on_minimize, {'button': 1, 'id': 'maxi_window'})
-        self.Bind(goo.BUTTONCLICK, self.on_minimize, {'button': 1, 'id': 'exit_window'})
+        gunge.event.EventManager.bindToGlobal(
+            (goo.BUTTONCLICK, self.on_minimize, {'objectid': 'mini_window'}),
+            (goo.BUTTONCLICK, self.on_maximize, {'objectid': 'maxi_window'}),
+            (goo.BUTTONCLICK, self.on_close,    {'objectid': 'exit_window'}))
 
     def on_minimize(self, event):
         """minimize the window"""
@@ -87,4 +94,4 @@ class TitleBar(Composite):
 
     def on_close(self, event):
         """close window"""
-        pass
+        pygame.event.post(pygame.event.Event(pygame.QUIT, {}))

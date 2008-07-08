@@ -24,6 +24,7 @@ class Container(goo.element.Element):
             self.min_width, self.min_height = (0, self.style['padding'] - self.style['margin'])
 
         self.children = [goo.parser.parse(node, self) for node in children if node.nodeType not in (3, 8)]
+        self.children = filter(lambda x: x is not None, self.children)
         self.create()
         self.arrange_children()
 

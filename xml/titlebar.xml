@@ -5,8 +5,8 @@ Content tags: title
 
 <gamegoo>
   <HrSizer expand="True" style="default_titlebar">
-    <!--<Content type="Icon" align="left"/>-->
-    <!--<Content type="Text" align="center"/>-->
+    <Content type="Icon" align="left" optional="True"/>
+    <Content type="Text" align="center" optional="True"/>
 
     <IconButton id="mini_window" image="minimize.png" align="right"/>
     <IconButton id="maxi_window" image="maximize.png" align="right"/>

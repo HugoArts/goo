@@ -85,7 +85,9 @@ def parse(node, parent=None):
         widget = widget(parent, node.childNodes, **get_attributes(node))
     else:
         widget = widget(parent, **get_attributes(node))
-    gunge.mv.ModelView.get_global().add(widget)
+
+    if widget is not None:
+        gunge.mv.ModelView.get_global().add(widget)
     return widget
 
 def get_widget(node):
