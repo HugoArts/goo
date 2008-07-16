@@ -40,6 +40,9 @@ def load_xml(filename, ids=None):
 
 def get_root(filename):
     """get the root element of an xml document"""
+    if isinstance(filename, file):
+        filename.seek(0)
+
     dom = minidom.parse(filename)
     root = dom.documentElement
     if root.tagName != "gamegoo":

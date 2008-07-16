@@ -94,6 +94,7 @@ class TitleBar(Composite):
         """start dragging if mouseclick on titlebar"""
         if self.rect.collidepoint(event.pos):
             self.dragging = True
+            raise gunge.event.StopHandling()
 
     def on_mouseup(self, event):
         """stop dragging"""
