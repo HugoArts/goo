@@ -37,6 +37,7 @@ class BaseButton(Control):
         """Check if the mouse is on the button, and click if it is."""
         if not self.hidden and self.rect.collidepoint(event.pos):
             self.down = True
+            raise gunge.event.StopHandling()
 
     def on_mouseup(self, event):
         """release the button if the mouse is released, possibly click"""
@@ -47,7 +48,7 @@ class BaseButton(Control):
     def click(self):
         """fire a BUTTONCLICK event with this button and button id if available"""
         event = pygame.event.Event(goo.BUTTONCLICK, {'button': self, 'objectid': self.id})
-        pygame.event.post(event)
+        self.process_event(event)
 
     def update(self):
         """update the button"""

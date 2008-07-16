@@ -21,6 +21,7 @@ class Element(gunge.sprite.Sprite):
         self.attributes = attributes
         self.style = goo.style.get(attributes['style'] if attributes.has_key('style') else "default")
         self.id = attributes.get('id', None)
+        self.handlers = {}
 
         gunge.event.EventManager.bindToGlobal(
             (gunge.event.KILL_OBJECT, self.onkillparent, {'object': self.parent}))
@@ -33,6 +34,43 @@ class Element(gunge.sprite.Sprite):
         is killed, this element must itself also be killed.
         """
         self.kill()
+
+    def bind_handler(self, eventtype, handlerfunc, attr_filter=None):
+        """bind event handlers to this element. This method is for the goo-specific way of handling events"""
+        if eventtype not in self.handlers:
+            self.handlers[eventtype] = []
+
+        handler = gunge.event.EventBinder(handlerfunc, attr_filter)
+        self.handlers[eventtype].append(handler)
+        return handler
+
+    def bind(self, *args):
+        """shorthand method for binding multiple handlers at once"""
+        for bind_args in args:
+            self.bind_handler(*bind_args)
+
+    def process_event(self, event):
+        """handle events in the goo-specific way.
+
+        this means that we look for handlers bound using self.bind. If one is found, this is called and we're done.
+        If not, we look for handlers in the parent of this element. You can also force the processing to continue by returning
+        something evaluating to True from your handler
+        """
+        for handler in self.handlers.get(event.type, []):
+            result = handler(event)
+            if result == gunge.event.NO_MATCH:
+                #no match, next handler
+                continue
+            elif result == gunge.event.SKIP:
+                #match, and upstream send requested
+                break
+            else:
+                #match, no upstream send requested. done
+                return
+        if not isinstance(self.parent, goo.NullParent):
+            self.parent.process_event(event)
+        else:
+            pygame.event.post(event)
 
     def create(self):
         """creates the element sprite and rect"""
