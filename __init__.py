@@ -3,12 +3,12 @@
 """Goo - XML based user interface working with gunge"""
 
 
-__all__ = ['element', 'composite', 'controls', 'containers', 'style', 'parser', 'draw']
+__all__ = ['element', 'containers', 'controls', 'composite', 'style', 'parser', 'draw']
 
 import goo.element
-import goo.composite
-import goo.controls
 import goo.containers
+import goo.controls
+import goo.composite
 import goo.style
 import goo.parser
 import goo.draw
