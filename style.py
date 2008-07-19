@@ -25,6 +25,7 @@ DEFAULT_OPTIONS = {
     'border_hover': (20, 100, 145),
     'border_width': 1,
     'border_radius': 5,
+    'border_rounding': 0xF,
 
     'font':        None,
     'font_height': 20,

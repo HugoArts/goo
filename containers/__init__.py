@@ -10,3 +10,4 @@ __all__ = ["base", "sizer"]
 
 from goo.containers.base  import Container, HrContainer
 from goo.containers.sizer import Sizer, HrSizer
+from goo.containers.panel import Panel

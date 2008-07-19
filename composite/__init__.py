@@ -6,3 +6,4 @@ __all__ = ["base", "titlebar"]
 
 from goo.composite.base     import Composite, Content
 from goo.composite.titlebar import TitleBar
+from goo.composite.frame    import Frame

@@ -1,0 +1,11 @@
+<!--
+Layout file for the Frame element
+Content tags: title, menubar, sizer
+-->
+
+<gamegoo>
+  <Sizer style="default_frame">
+    <TitleBar />
+    <Content tagtype="Panel" />
+  </Sizer>
+</gamegoo>

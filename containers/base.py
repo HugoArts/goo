@@ -69,7 +69,7 @@ class Container(goo.element.Element):
     def render(self, surface):
         """render container decorations to the screen"""
         #the bottom one is the box border, the top one the box itself
-        goo.draw.rounded_rect(surface, self.rect, (self.style['background_color'], 0, self.style['border_radius']))
+        goo.draw.rounded_rect(surface, self.rect, (self.style['background_color'], 0, self.style['border_radius'], self.style['border_rounding']))
         goo.draw.rounded_rect(surface, self.rect, self.style)
 
 

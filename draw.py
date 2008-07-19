@@ -2,7 +2,7 @@
 
 """draw functions used to draw the controls"""
 
-import pygame, goo.style
+import pygame, goo
 import math
 
 def alpha_surface(*args):
@@ -40,9 +40,11 @@ def rounded_rect(target_surf, rect, style):
     """
     #select best possible draw function
     if isinstance(style, goo.style.Style):
-        color, width, radius = style['border_color'], style['border_width'], style['border_radius']
+        color, width, radius, rounding = style['border_color'], style['border_width'], style['border_radius'], style['border_rounding']
+    elif len(style) == 3:
+        (color, width, radius), rounding = style, goo.ALL
     else:
-        color, width, radius = style
+        color, width, radius, rounding = style
     draw_circle = pygame.draw.circle if width <= 1 else circle
     alpha = color[3] if len(color) == 4 else 255 
     colorkey = (0,0,0) if color[:3] != (0,0,0) else (255, 255, 255)
@@ -61,10 +63,14 @@ def rounded_rect(target_surf, rect, style):
 
     #draw the rectangle and circle corners
     pygame.draw.rect(surf, color, surf_rect, width)
-    surf.blit(circ, (0, 0), pygame.Rect((0, 0), (radius, radius)))
-    surf.blit(circ, (0, r.h - radius), pygame.Rect((0, radius), (radius, radius)))
-    surf.blit(circ, (r.w - radius, 0), pygame.Rect((radius, 0), (radius, radius)))
-    surf.blit(circ, (r.w - radius, r.h - radius), pygame.Rect((radius, radius), (radius, radius)))
+    if rounding & goo.TOPLEFT:
+        surf.blit(circ, (0, 0), pygame.Rect((0, 0), (radius, radius)))
+    if rounding & goo.BOTTOMLEFT:
+        surf.blit(circ, (0, r.h - radius), pygame.Rect((0, radius), (radius, radius)))
+    if rounding & goo.TOPRIGHT:
+        surf.blit(circ, (r.w - radius, 0), pygame.Rect((radius, 0), (radius, radius)))
+    if rounding & goo.BOTTOMRIGHT:
+        surf.blit(circ, (r.w - radius, r.h - radius), pygame.Rect((radius, radius), (radius, radius)))
 
     surf.set_colorkey(colorkey)
     surf.set_alpha(alpha)

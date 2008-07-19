@@ -20,9 +20,21 @@ import pygame, gunge
 img_loader = gunge.media.ImageLoader("goo/images", False)
 xml_loader = gunge.media.ResourceLoader(("goo/xml", "."), False)
 
+#constants
+TOPLEFT     = 1
+TOPRIGHT    = 2
+BOTTOMLEFT  = 4
+BOTTOMRIGHT = 8
+
+TOP    = TOPLEFT | TOPRIGHT
+BOTTOM = BOTTOMLEFT | BOTTOMRIGHT
+ALL    = TOP | BOTTOM
+
+#default styles
 goo.style.add(goo.style.Style("default_titlebar",
     margin           = 5,
     padding          = 3,
+    border_rounding  = TOP,
     border_color     = (0, 0, 0, 0),
     background_color = (0, 140, 215),))
 
@@ -30,6 +42,13 @@ goo.style.add(goo.style.Style("default_sizer",
     padding          = 0,
     border_color     = (0, 0, 0, 0),
     background_color = (0, 0, 0, 0)))
+
+goo.style.add(goo.style.Style("default_frame",
+    padding         = 0,
+    margin          = 0,
+    border_rounding = TOP))
+
+goo.style.add(goo.style.Style("default_panel", border_rounding = 0))
 
 #prepare goo event types
 BUTTONCLICK = gunge.event.USEREVENT + 1
