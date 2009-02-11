@@ -48,7 +48,8 @@ goo.style.add(goo.style.Style("default_frame",
     margin          = 0,
     border_rounding = TOP))
 
-goo.style.add(goo.style.Style("default_panel", border_rounding = 0))
+goo.style.add(goo.style.Style("default_panel",
+    border_rounding = 0))
 
 #prepare goo event types
 BUTTONCLICK = gunge.event.USEREVENT + 1
