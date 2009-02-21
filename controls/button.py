@@ -12,20 +12,18 @@ class BaseButton(base.Control):
     def __init__(self, parent, **attributes):
         """initialize button"""
         base.Control.__init__(self, parent, **attributes)
-        gunge.event.EventManager.bindToGlobal(
-            (pygame.MOUSEBUTTONDOWN, self.on_mousedown, {'button':1}),
-            (pygame.MOUSEBUTTONUP,   self.on_mouseup,   {'button':1}))
-
         self.mouseover = False
         self.focus = False
         self.down = False
 
+    @gunge.event.bind(pygame.MOUSEBUTTONDOWN, {'button': 1})
     def on_mousedown(self, event):
         """Check if the mouse is on the button, and click if it is."""
         if not self.hidden and self.rect.collidepoint(event.pos):
             self.down = True
             raise gunge.event.StopHandling()
 
+    @gunge.event.bind(pygame.MOUSEBUTTONUP, {'button': 1})
     def on_mouseup(self, event):
         """release the button if the mouse is released, possibly click"""
         if self.down and not self.hidden and self.rect.collidepoint(event.pos):
@@ -37,12 +35,6 @@ class BaseButton(base.Control):
         event = pygame.event.Event(goo.BUTTONCLICK, {'button': self, 'objectid': self.id})
         self.process_event(event)
 
-    def update(self):
-        """update the button"""
-        base.Control.update(self)
-        self.mouseover = self.rect.collidepoint(pygame.mouse.get_pos())
-        self.down = self.down and self.mouseover
-
     def create(self):
         """create the base button.
 
@@ -51,11 +43,20 @@ class BaseButton(base.Control):
         self.img = goo.draw.alpha_surface(self.rect.size)
         goo.draw.rounded_rect(self.img, self.rect, self.style)
 
-    def render(self, surface):
+    @gunge.event.bind(gunge.event.UPDATE)
+    def update(self, event):
+        """update the button"""
+        base.Control.update(self, event)
+        self.mouseover = self.rect.collidepoint(pygame.mouse.get_pos())
+        self.down = self.down and self.mouseover
+
+    @gunge.event.bind(gunge.event.RENDER)
+    def render(self, event):
         """render the base button
 
         takes care of rendering correct borders/backgrounds when clicked or mouse hovers
         """
+        surface = event.display.screen
         if self.down:
             #draw clicked background
             goo.draw.rounded_rect(surface, self.rect, (self.style['clicked_color'], 0, self.style['border_radius']))
@@ -67,7 +68,7 @@ class BaseButton(base.Control):
             #draw border
             style = [self.style['border_hover'], self.style['border_width'], self.style['border_radius']+2]
             goo.draw.rounded_rect(surface, self.rect.inflate(2*style[1], 2*style[1]), style)
-        base.Control.render(self, surface)
+        base.Control.render(self, event)
 
 
 class Button(BaseButton):
@@ -90,14 +91,15 @@ class Button(BaseButton):
         self.txtimg = txtimg
         self.parent.adjust(self)
 
-    def render(self, surface):
+    @gunge.event.bind(gunge.event.RENDER)
+    def render(self, event):
         """render the button"""
         txtrect = self.txtimg.get_rect()
         txtrect.center = self.rect.center
         if self.down:
             txtrect.move_ip(0, 1)
-        BaseButton.render(self, surface)
-        surface.blit(self.txtimg, txtrect)
+        BaseButton.render(self, event)
+        event.display.screen.blit(self.txtimg, txtrect)
 
 
 class IconButton(BaseButton):
@@ -117,9 +119,10 @@ class IconButton(BaseButton):
         BaseButton.create(self)
         self.parent.adjust(self)
 
-    def render(self, surface):
+    @gunge.event.bind(gunge.event.RENDER)
+    def render(self, event):
         """render the icon button"""
         icon_r = self.icon.get_rect()
         icon_r.center = self.rect.center
-        BaseButton.render(self, surface)
-        surface.blit(self.icon, icon_r)
+        BaseButton.render(self, event)
+        event.display.screen.blit(self.icon, icon_r)

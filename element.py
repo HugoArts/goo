@@ -23,24 +23,12 @@ class Element(gunge.sprite.Sprite):
         self.id = attributes.get('id', None)
         self.handlers = {}
 
-        gunge.event.EventManager.bindToGlobal(
-            (gunge.event.KILL_OBJECT, self.onkillparent, {'object': self.parent}))
-
-    def onkillparent(self, event):
-        """called when the elements' parent is killed.
-
-        When any sprite is killed, it sends out a KILL_OBJECT event to ensure
-        proper resource cleanup (in the modelview, for example). If this elements' parent
-        is killed, this element must itself also be killed.
-        """
-        self.kill()
-
     def bind_handler(self, eventtype, handlerfunc, attr_filter=None):
         """bind event handlers to this element. This method is for the goo-specific way of handling events"""
         if eventtype not in self.handlers:
             self.handlers[eventtype] = []
 
-        handler = gunge.event.EventBinder(handlerfunc, attr_filter)
+        handler = Binder(eventtype, attr_filter, handlerfunc)
         self.handlers[eventtype].append(handler)
         return handler
 
@@ -57,11 +45,12 @@ class Element(gunge.sprite.Sprite):
         something evaluating to True from your handler
         """
         for handler in self.handlers.get(event.type, []):
+            print handler.__call__
             result = handler(event)
-            if result == gunge.event.NO_MATCH:
+            if result == goo.NO_MATCH:
                 #no match, next handler
                 continue
-            elif result == gunge.event.SKIP:
+            elif result == goo.SKIP:
                 #match, and upstream send requested
                 break
             else:
@@ -91,9 +80,11 @@ class Element(gunge.sprite.Sprite):
                 continue
         return pygame.Rect(self.pos, self.rect.size)
 
-    def update(self):
+    @gunge.event.bind(gunge.event.UPDATE)
+    def update(self, event):
         """update element (recalculate absolute position if parent has moved)"""
         self.rect.topleft = self.get_absolutepos()
+        gunge.sprite.Sprite.update(self, event)
 
     def get_absolutepos(self):
         """get elements' absolute position
@@ -109,7 +100,10 @@ class Element(gunge.sprite.Sprite):
         returns the elements' position in an (x, y) tuple. This position
         is relative to the elements' parent. this is used through the self.pos property.
         """
-        return self._pos
+        try:
+            return self._pos
+        except AttributeError:
+            return None
 
     def set_pos(self, (x, y)):
         """set elements' relative position
@@ -130,3 +124,19 @@ class Element(gunge.sprite.Sprite):
         self.rect = new_rect
 
     pos = property(get_pos, set_pos, doc="The position (topleft corner) of the element relative to its parent, in an (x, y) tuple).")
+
+
+class Binder(gunge.event.Binder):
+    """goo Binder that is slightly adapted to accomodate for goo event handling"""
+
+    def __init__(self, eventtype, attr_filter, handler_func):
+        gunge.event.Binder.__init__(self, eventtype, attr_filter, handler_func)
+
+        self.func = handler_func
+        self.__call__ = self.function_call
+
+    def function_call(self, event):
+        """returns goo.NO_MATCH if the filter does not match. If it does, the result of calling the handler is returned"""
+        if self.filter_check(event):
+            return self.func(event)
+        return goo.NO_MATCH

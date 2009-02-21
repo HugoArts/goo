@@ -4,7 +4,6 @@
 
 import xml.dom.minidom as minidom
 import pygame
-import gunge.mv
 import goo
 
 PARSE_ALL = 0
@@ -89,8 +88,6 @@ def parse(node, parent=None):
     else:
         widget = widget(parent, **get_attributes(node))
 
-    if widget is not None:
-        gunge.mv.ModelView.get_global().add(widget)
     return widget
 
 def get_widget(node):

@@ -54,6 +54,9 @@ goo.style.add(goo.style.Style("default_panel",
 #prepare goo event types
 BUTTONCLICK = gunge.event.USEREVENT + 1
 
+#event return types
+NO_MATCH = 0
+SKIP = 1
 
 class NullParent:
     """A dummy parent.

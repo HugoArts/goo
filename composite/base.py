@@ -6,9 +6,7 @@ import xml.dom.minidom as minidom
 import goo.containers
 import goo.parser
 import pygame
-import gunge
 import os
-
 
 class Composite(goo.containers.Sizer):
     """Responsible for loading widgets from xml files and using them as children"""

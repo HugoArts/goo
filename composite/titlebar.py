@@ -17,26 +17,24 @@ class TitleBar(base.Composite):
         base.Composite.__init__(self, parent, children, "titlebar.xml", **attributes)
 
         self.dragging = False
-        gunge.event.EventManager.bindToGlobal(
-            (pygame.MOUSEBUTTONDOWN, self.on_mousedown, {'button': 1}),
-            (pygame.MOUSEBUTTONUP,   self.on_mouseup,   {'button': 1}),
-            (pygame.MOUSEMOTION,     self.on_motion))
-
         self.bind(
             (goo.BUTTONCLICK, self.on_minimize, {'objectid': 'mini_window'}),
             (goo.BUTTONCLICK, self.on_maximize, {'objectid': 'maxi_window'}),
             (goo.BUTTONCLICK, self.on_close,    {'objectid': 'exit_window'}))
 
+    @gunge.event.bind(pygame.MOUSEBUTTONDOWN, {'button': 1})
     def on_mousedown(self, event):
         """start dragging if mouseclick on titlebar"""
         if self.rect.collidepoint(event.pos):
             self.dragging = True
             raise gunge.event.StopHandling()
 
+    @gunge.event.bind(pygame.MOUSEBUTTONUP, {'button': 1})
     def on_mouseup(self, event):
         """stop dragging"""
         self.dragging = False
 
+    @gunge.event.bind(pygame.MOUSEMOTION)
     def on_motion(self, event):
         """drag the parent window"""
         if self.dragging:

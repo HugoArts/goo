@@ -8,6 +8,7 @@ may draw different borders or backgrounds, and can also arrange their children d
 
 import goo.element, goo.parser, goo.draw
 import pygame
+import gunge.event
 
 class Container(goo.element.Element):
     """A basic container.
@@ -66,8 +67,10 @@ class Container(goo.element.Element):
 
         self.parent.adjust(self)
 
-    def render(self, surface):
+    @gunge.event.bind(gunge.event.RENDER)
+    def render(self, event):
         """render container decorations to the screen"""
+        surface = event.display.screen
         #the bottom one is the box border, the top one the box itself
         goo.draw.rounded_rect(surface, self.rect, (self.style['background_color'], 0, self.style['border_radius'], self.style['border_rounding']))
         goo.draw.rounded_rect(surface, self.rect, self.style)
