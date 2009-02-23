@@ -84,6 +84,9 @@ class Style(dict):
         else:
             raise KeyError("Attempt to retrieve invalid GUI style option: '%s'" % key)
 
+    def __str__(self):
+        return "<Style %s %s>" % (self.name, dict.__str__(self)) 
+
 
 # dict of all registered styles. Styles must be registered to be recognised in XML
 style_dict = {'default': Style("default")}
