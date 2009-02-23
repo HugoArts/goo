@@ -45,7 +45,6 @@ class Element(gunge.sprite.Sprite):
         something evaluating to True from your handler
         """
         for handler in self.handlers.get(event.type, []):
-            print handler.__call__
             result = handler(event)
             if result == goo.NO_MATCH:
                 #no match, next handler

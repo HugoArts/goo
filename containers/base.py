@@ -67,6 +67,15 @@ class Container(goo.element.Element):
 
         self.parent.adjust(self)
 
+    def kill(self):
+        """unbind all events for this widget and any child widgets.
+
+        It essentially ceases to exist, since it no longer receives update or render events. Or any events, for that matter.
+        """
+        for child in self.children:
+            child.kill()
+        goo.element.Element.kill(self)
+
     @gunge.event.bind(gunge.event.RENDER)
     def render(self, event):
         """render container decorations to the screen"""
