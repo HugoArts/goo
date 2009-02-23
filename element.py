@@ -19,7 +19,7 @@ class Element(gunge.sprite.Sprite):
 
         self.parent = parent
         self.attributes = attributes
-        self.style = goo.style.get(attributes['style'] if attributes.has_key('style') else "default")
+        self.style = goo.style.get(attributes.get('style', "default"))
         self.id = attributes.get('id', None)
         self.handlers = {}
 
