@@ -51,6 +51,11 @@ goo.style.add(goo.style.Style("default_frame",
 goo.style.add(goo.style.Style("default_panel",
     border_rounding = 0))
 
+goo.style.add(goo.style.Style("default_iconbutton",
+    border_color     = (0, 0, 0, 0),
+    hover_color      = (50, 190, 255, 100),
+    padding          = 0))
+
 #prepare goo event types
 BUTTONCLICK = gunge.event.USEREVENT + 1
 

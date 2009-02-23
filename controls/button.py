@@ -108,7 +108,7 @@ class IconButton(BaseButton):
     def __init__(self, parent, image, **attributes):
         """initialize IconButton"""
         self.image = image
-        BaseButton.__init__(self, parent, **attributes)
+        BaseButton.__init__(self, parent, style="default_iconbutton", **attributes)
 
     def create(self):
         """create the IconButton"""
