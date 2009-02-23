@@ -11,7 +11,7 @@ class Checkbox(base.Control):
     """A checkbox control that can be flipped on or off"""
 
     def __init__(self, parent, **attributes):
-        self.checked = attributes.get('checked', False)
+        self.checked = attributes.get('checked', False) == "True"
         self.description = attributes.get('description', None)
         self.icon = goo.img_loader["check.png"]
         self.mouse_over = False
