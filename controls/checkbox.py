@@ -22,7 +22,7 @@ class Checkbox(base.Control):
         txtimg = font.render(self.description, True, self.style['font_color'])
         txtrect = txtimg.get_rect()
 
-        self.img = goo.draw.alpha_surface((12 + txtrect.width + 4 + 2*self.style['padding'], max(12, txtrect.height) + 2*self.style['padding']))
+        self.img = goo.draw.alpha_surface((16 + txtrect.width +  + 2*self.style['padding'], max(12, txtrect.height) + 2*self.style['padding']))
         self.rect = self.img.get_rect()
         self.box_rect = pygame.Rect((self.style['padding'],)*2, (12, 12))
         self.box_rect.centery = self.rect.height / 2.
@@ -55,4 +55,4 @@ class Checkbox(base.Control):
         base.Control.render(self, event)
 
         if self.checked:
-            surface.blit(self.icon, (self.box_rect.left + self.style['padding'], self.box_rect.top + self.style['padding']))
+            surface.blit(self.icon, (self.box_rect.left + 1, self.box_rect.top + 1))

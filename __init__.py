@@ -54,13 +54,14 @@ goo.style.add(goo.style.Style("default_panel",
 goo.style.add(goo.style.Style("default_iconbutton",
     border_color     = (0, 0, 0, 0),
     hover_color      = (50, 190, 255, 100),
+    clicked_color    = (200, 200, 200, 100),
     padding          = 0))
 
 goo.style.add(goo.style.Style("default_checkbox",
     background_color = (255, 255, 255),
     border_color     = (153, 146, 146),
     hover_color      = (255, 255, 255),
-    padding          = 1))
+    padding          = 2))
 
 #prepare goo event types
 BUTTONCLICK = gunge.event.USEREVENT + 1
