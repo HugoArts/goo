@@ -59,6 +59,7 @@ goo.style.add(goo.style.Style("default_iconbutton",
 goo.style.add(goo.style.Style("default_checkbox",
     background_color = (255, 255, 255),
     border_color     = (153, 146, 146),
+    hover_color      = (255, 255, 255),
     padding          = 1))
 
 #prepare goo event types
