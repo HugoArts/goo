@@ -24,7 +24,7 @@ class Checkbox(base.Control):
         txtimg = font.render(self.description, True, self.style['font_color'])
         txtrect = txtimg.get_rect()
 
-        self.img = goo.draw.alpha_surface((16 + txtrect.width +  + 2*self.style['padding'], max(12, txtrect.height) + 2*self.style['padding']))
+        self.img = goo.draw.alpha_surface((16 + txtrect.width + 2*self.style['padding'], max(12, txtrect.height) + 2*self.style['padding']))
         self.rect = self.img.get_rect()
         self.box_rect = pygame.Rect((self.style['padding'],)*2, (12, 12))
         self.box_rect.centery = self.rect.height / 2.
