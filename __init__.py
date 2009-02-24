@@ -5,20 +5,8 @@
 
 __all__ = ['element', 'containers', 'controls', 'composite', 'style', 'parser', 'draw']
 
-import goo.element
-import goo.containers
-import goo.controls
-import goo.composite
-import goo.style
-import goo.parser
-import goo.draw
-
-
+#temporary import
 import pygame, gunge
-
-#prepare image loader for goo internal resources
-img_loader = gunge.media.ImageLoader("goo/images", False)
-xml_loader = gunge.media.ResourceLoader(("goo/xml", "."), False)
 
 #constants
 TOPLEFT     = 1
@@ -29,6 +17,27 @@ BOTTOMRIGHT = 8
 TOP    = TOPLEFT | TOPRIGHT
 BOTTOM = BOTTOMLEFT | BOTTOMRIGHT
 ALL    = TOP | BOTTOM
+
+#prepare goo event types
+BUTTONCLICK  = gunge.event.USEREVENT + 1
+CHECKCHANGED = gunge.event.USEREVENT + 2
+
+#event return types
+NO_MATCH = 0
+SKIP = 1
+
+import goo.element
+import goo.containers
+import goo.controls
+import goo.composite
+import goo.style
+import goo.parser
+import goo.draw
+
+#prepare image loader for goo internal resources
+img_loader = gunge.media.ImageLoader("goo/images", False)
+xml_loader = gunge.media.ResourceLoader(("goo/xml", "."), False)
+
 
 #default styles
 goo.style.add(goo.style.Style("default_titlebar",
@@ -63,13 +72,6 @@ goo.style.add(goo.style.Style("default_checkbox",
     hover_color      = (255, 255, 255),
     padding          = 2))
 
-#prepare goo event types
-BUTTONCLICK  = gunge.event.USEREVENT + 1
-CHECKCHANGED = gunge.event.USEREVENT + 2
-
-#event return types
-NO_MATCH = 0
-SKIP = 1
 
 class NullParent:
     """A dummy parent.
