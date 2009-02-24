@@ -132,9 +132,8 @@ class Binder(gunge.event.Binder):
         gunge.event.Binder.__init__(self, eventtype, attr_filter, handler_func)
 
         self.func = handler_func
-        self.__call__ = self.function_call
 
-    def function_call(self, event):
+    def __call__(self, event):
         """returns goo.NO_MATCH if the filter does not match. If it does, the result of calling the handler is returned"""
         if self.filter_check(event):
             return self.func(event)
