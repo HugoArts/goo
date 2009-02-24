@@ -64,7 +64,8 @@ goo.style.add(goo.style.Style("default_checkbox",
     padding          = 2))
 
 #prepare goo event types
-BUTTONCLICK = gunge.event.USEREVENT + 1
+BUTTONCLICK  = gunge.event.USEREVENT + 1
+CHECKCHANGED = gunge.event.USEREVENT + 2
 
 #event return types
 NO_MATCH = 0

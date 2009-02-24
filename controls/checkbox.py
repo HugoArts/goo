@@ -37,6 +37,8 @@ class Checkbox(base.Control):
     def on_mouseup(self, event):
         if self.rect.collidepoint(event.pos):
             self.checked = not self.checked
+            event = pygame.event.Event(goo.CHECKCHANGED, {'objectid': self.id, 'objecttype': type(self), 'checked': self.checked})
+            pygame.event.post(event)
 
     @gunge.event.bind(gunge.event.UPDATE)
     def update(self, event):
