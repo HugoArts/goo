@@ -11,6 +11,7 @@ class Checkbox(base.Control):
     """A checkbox control that can be flipped on or off"""
 
     def __init__(self, parent, **attributes):
+        """initialize Checkbox instance"""
         self.checked = attributes.get('checked', False) == "True"
         self.description = attributes.get('description', "")
         self.icon = goo.img_loader["check.png"]
@@ -18,6 +19,7 @@ class Checkbox(base.Control):
         base.Control.__init__(self, parent, style="default_checkbox", **attributes)
 
     def create(self):
+        """create the checkbox surface"""
         font = pygame.font.Font(self.style['font'], self.style['font_height'])
         txtimg = font.render(self.description, True, self.style['font_color'])
         txtrect = txtimg.get_rect()
@@ -35,6 +37,7 @@ class Checkbox(base.Control):
 
     @gunge.event.bind(pygame.MOUSEBUTTONUP, {'button': 1})
     def on_mouseup(self, event):
+        """if the MOUSEUP collides with the checkbox, change the checked attribute and send out a CHECKCHANGED event"""
         if self.rect.collidepoint(event.pos):
             self.checked = not self.checked
             event = pygame.event.Event(goo.CHECKCHANGED, {'objectid': self.id, 'objecttype': type(self), 'checked': self.checked})
@@ -42,6 +45,7 @@ class Checkbox(base.Control):
 
     @gunge.event.bind(gunge.event.UPDATE)
     def update(self, event):
+        """update the checkbox. Bound to gunge.event.UPDATE"""
         base.Control.update(self, event)
         self.mouse_over = self.rect.collidepoint(pygame.mouse.get_pos())
 
@@ -51,6 +55,7 @@ class Checkbox(base.Control):
 
     @gunge.event.bind(gunge.event.RENDER)
     def render(self, event):
+        """render the checkbox. Bound to gunge.event.RENDER"""
         surface = event.display.screen
         if self.mouse_over:
             pygame.draw.rect(surface, self.style['hover_color'], self.rect, 0)
