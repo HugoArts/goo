@@ -121,10 +121,10 @@ class Element(gunge.sprite.Sprite):
         parent_rect = self.parent.rect
         new_rect = pygame.Rect((x + parent_rect.left, y + parent_rect.top), self.rect.size)
         #perform a boundary check, unless the parent size is 0 (meaning uninitialized)
-        if parent_rect.size != (0,0) and (x < 0 or y < 0 or self.rect.right > parent_rect.right or self.rect.bottom > parent_rect.bottom):
+        if parent_rect.size != (0,0) and (x < 0 or y < 0 or new_rect.right > parent_rect.right or new_rect.bottom > parent_rect.bottom):
                 #TODO create goo.Error class
                 #raise goo.Error("element position out of parent bounds: (%s, %s)" % (x, y))
-                raise RuntimeError("element position out of parent bounds: (%s, %s), %s" % (x, y, self.id))
+                raise RuntimeError("element position out of parent bounds: (%s, %s), %s" % (new_rect, parent_rect, self.id))
 
         #set new position relative and absolute
         self._pos = (x, y)
