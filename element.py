@@ -61,8 +61,15 @@ class Element(gunge.sprite.Sprite):
             pygame.event.post(event)
 
     def create(self):
-        """creates the element sprite and rect"""
-        raise NotImplementedError("class '%s' does not implement create()" % type(self).__name__)
+        """creates the element sprite and rect
+
+        this method is supposed to set up the element sprite and rect. This base method only creates a rect
+        with the width and height specified in the attributes (default 0). call this in your derived method.
+        You can always adjust the sizes if the element does not fit inside.
+        """
+        width = int(self.attributes.get("width", 0))
+        height = int(self.attributes.get("height", 0))
+        self.rect = pygame.Rect(0, 0, width, height)
 
     def arrange(self, area):
         """arranges the element inside its parent
@@ -75,7 +82,7 @@ class Element(gunge.sprite.Sprite):
         for attr, arg in self.attributes.items():
             try:
                 getattr(goo.style, attr)(self, area, arg)
-            except AttributeError, e:
+            except AttributeError:
                 continue
         return pygame.Rect(self.pos, self.rect.size)
 
