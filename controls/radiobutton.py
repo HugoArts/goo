@@ -37,7 +37,6 @@ class Radiobutton(base.Control):
         self.img.blit(txtimg, (16, self.style['padding']))
 
         goo.draw.circle(self.img, self.style['border_color'], self.radio_rect, 6, self.style['border_width'])
-        self.parent.adjust(self)
 
     @gunge.event.bind(goo.CHECKCHANGED, {'objecttype': lambda x: x is Radiobutton})
     def on_otherchecked(self, event):

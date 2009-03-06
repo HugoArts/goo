@@ -15,3 +15,4 @@ class Control(goo.element.Element):
         """
         goo.element.Element.__init__(self, parent, **attributes)
         self.create()
+        self.parent.adjust(self)

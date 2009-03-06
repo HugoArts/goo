@@ -89,7 +89,6 @@ class Button(BaseButton):
         BaseButton.create(self)
 
         self.txtimg = txtimg
-        self.parent.adjust(self)
 
     @gunge.event.bind(gunge.event.RENDER)
     def render(self, event):
@@ -117,7 +116,6 @@ class IconButton(BaseButton):
 
         self.rect = pygame.Rect(0, 0, icon_r.width + self.style['margin'], icon_r.height + self.style['margin'])
         BaseButton.create(self)
-        self.parent.adjust(self)
 
     @gunge.event.bind(gunge.event.RENDER)
     def render(self, event):

@@ -33,7 +33,6 @@ class Checkbox(base.Control):
         self.img.blit(txtimg, (16, self.style['padding']))
 
         pygame.draw.rect(self.img, self.style['border_color'], self.box_rect, self.style['border_width'])
-        self.parent.adjust(self)
 
     @gunge.event.bind(pygame.MOUSEBUTTONUP, {'button': 1})
     def on_mouseup(self, event):
