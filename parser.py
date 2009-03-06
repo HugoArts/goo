@@ -87,15 +87,23 @@ def parse(node, parent=None):
         widget = widget(parent, node.childNodes, **get_attributes(node))
     else:
         widget = widget(parent, **get_attributes(node))
-
     return widget
 
 def get_widget(node):
     """Retrieve a widget for a certain node.
-    
+
     Every node has an associated widget that must be built. This function fetches
     the relevant class to do so. It uses the string of the tagname to retrieve the right class.
     """
+    #we make an exception for untagged text. It's synonymous to the StaticText control
+    if node.nodeType == 3:
+        if not node.data.isspace():
+            return goo.controls.text.StaticText
+        else:
+            class x(object):
+                def __new__(cls, *args, **xargs): return None
+            return x
+
     #the widget could be located in one of several modules. We'll have to try them all
     for module in (goo.controls, goo.containers, goo.composite):
         try:
@@ -107,6 +115,9 @@ def get_widget(node):
 
 def get_attributes(node):
     """retrieve a dictionary of the attributes for a node"""
+    if node.nodeType == 3:
+        return {'text': node.data}
+
     attr_map = node.attributes
     attributes = (attr_map.item(i) for i in range(attr_map.length))
     return dict((str(attr.name), attr.value) for attr in attributes)
