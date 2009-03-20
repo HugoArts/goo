@@ -51,7 +51,7 @@ def get_root(filename):
 def parse_firstchild(rootnode):
     """parse the first child of some node"""
     node = rootnode.firstChild
-    while node.nodeType == 3:
+    while node.nodeType in (3, 8):
         node = node.nextSibling
     widget = parse(node)
     widget.arrange(pygame.Rect(10, 10, 0, 0))

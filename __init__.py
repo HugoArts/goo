@@ -54,8 +54,7 @@ goo.style.add(goo.style.Style("default_sizer",
 
 goo.style.add(goo.style.Style("default_frame",
     padding         = 0,
-    margin          = 0,
-    border_rounding = TOP))
+    margin          = 0))
 
 goo.style.add(goo.style.Style("default_panel",
     border_rounding = 0))

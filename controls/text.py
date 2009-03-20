@@ -39,10 +39,10 @@ class StaticText(base.Control):
 
 
 def wrap_text(text, font, maxwidth):
-    """wrap text.
+    """wrap text
 
     given a string with a specific pygame font object and a maximum width, return a list of strings that
-    are as long as possible without exceeding the maximum lenght. Breaks up at whitespace if possible,
+    are as long as possible without exceeding the maximum length. Breaks up at whitespace if possible,
     otherwise starts breaking up words themselves.
     """
     text = text.lstrip()
