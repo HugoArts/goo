@@ -27,8 +27,8 @@ DEFAULT_OPTIONS = {
     'border_radius': 5,
     'border_rounding': 0xF,
 
-    'font':        None,
-    'font_height': 20,
+    'font': "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+    'font_height': 12,
     'font_color':  (0, 0, 0),
 }
 
