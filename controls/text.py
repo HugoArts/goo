@@ -15,7 +15,7 @@ class StaticText(base.Control):
     def __init__(self, parent, text, **attributes):
         """init StaticText"""
         self.text = text
-        base.Control.__init__(self, parent, width="100", height="100", style="default_sizer", expand="True", **attributes)
+        base.Control.__init__(self, parent, width="50", height="90", style="default_sizer", expand="True", **attributes)
 
     def arrange(self, area):
         """this does the job the create method would normally be doing.
@@ -29,7 +29,7 @@ class StaticText(base.Control):
 
         for n, line in enumerate(lines):
             s = font.render(line, True, self.style['font_color'])
-            self.img.blit(s, (self.style['padding'], self.style['padding'] + n * (font.size(line)[1] + 2)))
+            self.img.blit(s, (self.style['padding'], self.style['padding'] + n * (font.get_linesize())))
         return self.rect
 
     @gunge.event.bind(gunge.event.RENDER)
