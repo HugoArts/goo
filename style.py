@@ -87,6 +87,10 @@ class Style(dict):
     def __str__(self):
         return "<Style %s %s>" % (self.name, dict.__str__(self)) 
 
+    def font(style):
+        """shortcut for making a font object from this goo style object"""
+        return pygame.font.Font(self['font'], self['font_height'])
+
 
 # dict of all registered styles. Styles must be registered to be recognised in XML
 style_dict = {'default': Style("default")}
