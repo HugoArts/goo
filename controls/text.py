@@ -23,13 +23,13 @@ class StaticText(base.Control):
         This is required since the content changes with the size of the element.
         """
         self.rect = base.Control.arrange(self, area)
-        font = pygame.font.Font(self.style['font'], self.style['font_height'])
-        lines = wrap_multiline(self.text, font, self.rect.width)
+        lines = wrap_multiline(self.text, self.font, self.rect.width)
+        self.font = self.style.font()
         self.img = goo.draw.alpha_surface(self.rect.size)
 
         for n, line in enumerate(lines):
-            s = font.render(line, True, self.style['font_color'])
-            self.img.blit(s, (self.style['padding'], self.style['padding'] + n * (font.get_linesize())))
+            s = self.font.render(line, True, self.style['font_color'])
+            self.img.blit(s, (self.style['padding'], self.style['padding'] + n * (self.font.get_linesize())))
         return self.rect
 
     @gunge.event.bind(gunge.event.RENDER)
