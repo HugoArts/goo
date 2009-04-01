@@ -11,7 +11,7 @@ PARSE_ALL = 0
 
 class ParseError(Exception):
     """Raised when an error occurs while parsing an xml document"""
-    def __init__(self, msg, filename):
+    def __init__(self, msg, filename="Unknown"):
         Exception.__init__(self, msg)
         self.filename = filename
 
