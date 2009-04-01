@@ -66,8 +66,7 @@ class Style(dict):
         if key not in DEFAULT_OPTIONS:
             raise KeyError("Attempt to set invalid GUI style option: '%s'" % key)
         elif type(value) != type(DEFAULT_OPTIONS[key]):
-            raise TypeError("new value of '%s' is of wrong type ('%s' instead of '%s')"
-                            % (key, type(value), type(DEFAULT_OPTIONS[key])))
+            raise TypeError("new value of '%s' is of wrong type ('%s' instead of '%s')" % (key, type(value), type(DEFAULT_OPTIONS[key])))
         else:
             dict.__setitem__(self, key, value)
 
@@ -87,7 +86,7 @@ class Style(dict):
     def __str__(self):
         return "<Style %s %s>" % (self.name, dict.__str__(self)) 
 
-    def font(style):
+    def font(self):
         """shortcut for making a font object from this goo style object"""
         return pygame.font.Font(self['font'], self['font_height'])
 
