@@ -71,6 +71,10 @@ goo.style.add(goo.style.Style("default_checkbox",
     hover_color      = (255, 255, 255),
     padding          = 2))
 
+goo.style.add(goo.style.Style("default_text",
+    background_color = (255, 255, 255),
+    padding          = 2))
+
 
 class NullParent:
     """A dummy parent.
