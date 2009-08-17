@@ -21,7 +21,7 @@ class BaseButton(base.Control):
         """Check if the mouse is on the button, and click if it is."""
         if not self.hidden and self.rect.collidepoint(event.pos):
             self.down = True
-            raise gunge.event.StopHandling()
+            return gunge.event.HANDLE_STOP
 
     @gunge.event.bind(pygame.MOUSEBUTTONUP, {'button': 1})
     def on_mouseup(self, event):

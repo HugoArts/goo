@@ -27,7 +27,7 @@ class TitleBar(base.Composite):
         """start dragging if mouseclick on titlebar"""
         if self.rect.collidepoint(event.pos):
             self.dragging = True
-            raise gunge.event.StopHandling()
+            return gunge.event.HANDLE_STOP
 
     @gunge.event.bind(pygame.MOUSEBUTTONUP, {'button': 1})
     def on_mouseup(self, event):
