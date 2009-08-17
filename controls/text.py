@@ -23,8 +23,8 @@ class StaticText(base.Control):
         This is required since the content changes with the size of the element.
         """
         self.rect = base.Control.arrange(self, area)
-        lines = wrap_multiline(self.text, self.font, self.rect.width)
         self.font = self.style.font()
+        lines = wrap_multiline(self.text, self.font, self.rect.width)
         self.img = goo.draw.alpha_surface(self.rect.size)
 
         for n, line in enumerate(lines):
